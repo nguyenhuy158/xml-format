@@ -107,21 +107,12 @@
                     "default": true,
                     "description": "Preserve XML comments during formatting (when disabled, comments will be removed)"
                 },
-                "xml-formater.odooTagSpacing": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Add one blank line before and after specified tags (e.g., before <record> and after </record> or <record/>)"
-                },
-                "xml-formater.odooSpacingTags": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "default": [
-                        "record",
-                        "menuitem"
-                    ],
-                    "description": "List of XML tags that should have one blank line before and after the entire element"
+                "xml-formater.maximumBlankLines": {
+                    "type": "number",
+                    "default": 0,
+                    "minimum": 0,
+                    "maximum": 5,
+                    "description": "Maximum number of consecutive blank lines allowed"
                 },
                 "xml-formater.highlightErrorDuration": {
                     "type": "number",

@@ -13,8 +13,7 @@ interface XmlFormatterRcConfig {
     sortAttributes?: boolean;
     closeTagOnNewLine?: boolean;
     preserveComments?: boolean;
-    odooTagSpacing?: boolean;
-    odooSpacingTags?: string[];
+    maximumBlankLines?: number;
 }
 
 export class ConfigManager {
@@ -105,11 +104,8 @@ export class ConfigManager {
         if (rcConfig.preserveComments !== undefined) {
             options.preserveComments = rcConfig.preserveComments;
         }
-        if (rcConfig.odooTagSpacing !== undefined) {
-            options.odooTagSpacing = rcConfig.odooTagSpacing;
-        }
-        if (rcConfig.odooSpacingTags !== undefined) {
-            options.odooSpacingTags = rcConfig.odooSpacingTags;
+        if (rcConfig.maximumBlankLines !== undefined) {
+            options.maximumBlankLines = rcConfig.maximumBlankLines;
         }
 
         return options;
@@ -135,8 +131,7 @@ export class ConfigManager {
             selfClosingTags: config.get<boolean>('selfClosingTags', true),
             closeTagOnNewLine: config.get<boolean>('closeTagOnNewLine', false),
             preserveComments: config.get<boolean>('preserveComments', true),
-            odooTagSpacing: config.get<boolean>('odooTagSpacing', true),
-            odooSpacingTags: config.get<string[]>('odooSpacingTags', ['odoo', 'data', 'record', 'form', 'tree', 'kanban', 'search', 'calendar', 'pivot', 'graph', 'group', 'notebook', 'page', 'button', 'header', 'sheet', 'xpath', 'menuitem', 'act_window', 'report', 'template', 't', 'function', 'delete'])
+            maximumBlankLines: config.get<number>('maximumBlankLines', 0)
         };
 
         // Override with .xmlformatterrc if exists (highest priority)
