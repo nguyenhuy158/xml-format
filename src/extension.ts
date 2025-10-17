@@ -44,7 +44,7 @@ async function formatXmlDocument(document: vscode.TextDocument): Promise<vscode.
         const validation = formatter.validateXml(xmlContent);
         if (!validation.isValid) {
             const errorMsg = validation.error || 'Unknown validation error';
-            outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Format failed - Invalid XML: ${errorMsg}`);
+            outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] ❌ Format failed - Invalid XML: ${errorMsg}`);
 
             // Build detailed error message for popup
             let warningMessage = `⚠️ XML không hợp lệ - Không thể format`;
@@ -79,12 +79,12 @@ async function formatXmlDocument(document: vscode.TextDocument): Promise<vscode.
             document.positionAt(xmlContent.length)
         );
 
-        outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Format completed successfully`);
+        outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] ✅ Format completed successfully`);
         return [vscode.TextEdit.replace(fullRange, formattedXml)];
 
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Format on save failed: ${errorMessage}`);
+        outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] ❌ Format on save failed: ${errorMessage}`);
         console.error(`Format on save failed: ${errorMessage}`);
         return [];
     }
