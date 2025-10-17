@@ -32,6 +32,9 @@ This extension contributes the following settings:
 * `xml-formater.selfClosingTags`: Use self-closing tags for empty elements (default: `true`)
 * `xml-formater.formatOnSave`: Automatically format XML files when saving (default: `false`)
 * `xml-formater.odooSpecific`: Enable Odoo-specific XML formatting rules (default: `true`)
+* `xml-formater.preserveComments`: Preserve XML comments during formatting (default: `true`)
+  - When `true`: Comments are kept and properly formatted
+  - When `false`: Comments are removed during formatting
 
 ## Usage
 

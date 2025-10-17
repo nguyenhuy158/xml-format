@@ -9,6 +9,7 @@ export interface XmlFormatterOptions {
     sortAttributes: boolean;
     selfClosingTags: boolean;
     closeTagOnNewLine: boolean;
+    preserveComments: boolean;
 }
 
 export class XmlFormatter {
@@ -24,6 +25,7 @@ export class XmlFormatter {
             sortAttributes: false,
             selfClosingTags: true,
             closeTagOnNewLine: false,
+            preserveComments: true,
             ...options
         };
     }
@@ -43,7 +45,8 @@ export class XmlFormatter {
                 parseTrueNumberOnly: false,
                 arrayMode: false,
                 allowBooleanAttributes: true,
-                unpairedTags: ['br', 'hr', 'img', 'input', 'meta', 'link']
+                unpairedTags: ['br', 'hr', 'img', 'input', 'meta', 'link'],
+                commentPropName: this.options.preserveComments ? '#comment' : undefined
             };
 
             // Parse XML
@@ -60,7 +63,8 @@ export class XmlFormatter {
                 suppressBooleanAttributes: false,
                 suppressUnpairedNode: false,
                 textNodeName: '#text',
-                attributeNamePrefix: '@_'
+                attributeNamePrefix: '@_',
+                commentPropName: this.options.preserveComments ? '#comment' : undefined
             };
 
             // Build formatted XML
@@ -338,7 +342,8 @@ export class XmlFormatter {
         try {
             const parser = new XMLParser({
                 ignoreAttributes: false,
-                stopNodes: ['*.#text']
+                stopNodes: ['*.#text'],
+                commentPropName: this.options.preserveComments ? '#comment' : undefined
             });
             parser.parse(xmlContent);
             return { isValid: true };
@@ -373,7 +378,8 @@ export class XmlFormatter {
             formatAttributes: false,
             sortAttributes: false,
             selfClosingTags: true,
-            closeTagOnNewLine: false
+            closeTagOnNewLine: false,
+            preserveComments: true
         };
     }
 }

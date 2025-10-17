@@ -6,6 +6,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.0.7] - 2025-10-17
+
+### Added
+- **Comment Preservation**: New `preserveComments` option to control XML comment handling (default: `true`)
+  - When `true`: Comments are preserved and properly formatted
+  - When `false`: Comments are automatically removed during formatting
+
 ### Fixed
 - **Quote Entity Handling**: Fixed issue where single quotes (`'`) in XPath expressions and Odoo domains were being converted to `&apos;` entities
 - **Smart Quote Selection**: Attributes containing double quotes now automatically use single-quote wrapping for better readability

@@ -18,7 +18,8 @@ export class ConfigManager {
             formatAttributes: config.get<boolean>('formatAttributes', false),
             sortAttributes: config.get<boolean>('sortAttributes', false),
             selfClosingTags: config.get<boolean>('selfClosingTags', true),
-            closeTagOnNewLine: config.get<boolean>('closeTagOnNewLine', false)
+            closeTagOnNewLine: config.get<boolean>('closeTagOnNewLine', false),
+            preserveComments: config.get<boolean>('preserveComments', true)
         };
     }
 

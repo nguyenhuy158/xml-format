@@ -7,7 +7,7 @@
         "url": "https://github.com/nguyenhuy158/xml-formater.git"
     },
     "publisher": "nguyenhuy158",
-    "version": "0.0.5",
+    "version": "0.0.7",
     "engines": {
         "vscode": "^1.102.0"
     },
@@ -101,6 +101,11 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Put closing tag '/>' on a new line when formatting attributes on separate lines"
+                },
+                "xml-formater.preserveComments": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Preserve XML comments during formatting (when disabled, comments will be removed)"
                 }
             }
         }
