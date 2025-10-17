@@ -36,6 +36,13 @@ This extension contributes the following settings:
   - When `true`: Comments are kept and properly formatted
   - When `false`: Comments are removed during formatting
 
+### Odoo Tag Spacing (New!)
+* `xml-formater.odooTagSpacing`: Add blank lines between important Odoo tags (default: `true`)
+* `xml-formater.odooSpacingTags`: List of Odoo XML tags that should have blank lines between them (default: `['record', 'menuitem', 'template', 'function', 'delete', 'report']`)
+  - When enabled, tags in this list will automatically have at least one blank line after them
+  - Improves readability for large Odoo XML files
+  - Customize the list to include only the tags important to your workflow
+
 ## Usage
 
 ### Commands
@@ -87,6 +94,47 @@ The formatter automatically:
 - Preserves `'` in double-quoted attributes (doesn't convert to `&apos;`)
 - Uses single quotes for attributes containing double quotes for better readability
 - Decodes unnecessary entities in text content
+
+### Example: Odoo Tag Spacing
+
+The Odoo Tag Spacing feature automatically adds blank lines between important Odoo tags for better readability:
+
+**Before formatting:**
+```xml
+<odoo>
+    <data>
+        <record id="model_1" model="ir.model">
+            <field name="name">Model 1</field>
+        </record>
+        <record id="model_2" model="ir.model">
+            <field name="name">Model 2</field>
+        </record>
+        <menuitem id="menu_1" name="Menu 1"/>
+        <menuitem id="menu_2" name="Menu 2"/>
+    </data>
+</odoo>
+```
+
+**After formatting** (with `odooTagSpacing: true`):
+```xml
+<odoo>
+  <data>
+    <record id="model_1" model="ir.model">
+      <field name="name">Model 1</field>
+    </record>
+
+    <record id="model_2" model="ir.model">
+      <field name="name">Model 2</field>
+    </record>
+
+    <menuitem id="menu_1" name="Menu 1"/>
+
+    <menuitem id="menu_2" name="Menu 2"/>
+  </data>
+</odoo>
+```
+
+You can customize which tags should have spacing by modifying the `xml-formater.odooSpacingTags` setting.
 
 ## Requirements
 

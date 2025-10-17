@@ -10,6 +10,8 @@ export interface XmlFormatterOptions {
     selfClosingTags: boolean;
     closeTagOnNewLine: boolean;
     preserveComments: boolean;
+    odooTagSpacing: boolean;
+    odooSpacingTags: string[];
 }
 
 export class XmlFormatter {
@@ -26,6 +28,8 @@ export class XmlFormatter {
             selfClosingTags: true,
             closeTagOnNewLine: false,
             preserveComments: true,
+            odooTagSpacing: true,
+            odooSpacingTags: ['record', 'menuitem'],
             ...options
         };
     }
@@ -111,6 +115,11 @@ export class XmlFormatter {
 
         // Fix empty lines and ensure consistent line endings
         result = result.replace(/\n\s*\n/g, '\n');
+
+        // Apply Odoo tag spacing if enabled
+        if (this.options.odooTagSpacing && this.options.odooSpacingTags.length > 0) {
+            result = this.applyOdooTagSpacing(result);
+        }
 
         // Trim trailing whitespace from each line
         result = result.split('\n').map(line => line.trimEnd()).join('\n');
@@ -336,6 +345,121 @@ export class XmlFormatter {
     }
 
     /**
+     * Apply Odoo tag spacing - add blank lines between important tags
+     */
+    private applyOdooTagSpacing(xml: string): string {
+        const lines = xml.split('\n');
+        const result: string[] = [];
+        const tagStack: Array<{ tag: string; startLine: number; isSelfClosing: boolean }> = [];
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            const trimmed = line.trim();
+
+            // Skip empty lines and comments
+            if (trimmed === '' || trimmed.startsWith('<!--')) {
+                result.push(line);
+                continue;
+            }
+
+            // Check for single-line self-closing tag: <tag ... />
+            const singleLineSelfClosingMatch = trimmed.match(/^<([a-zA-Z][a-zA-Z0-9_-]*)\s[^>]*\/>$/);
+
+            // Check for opening tag: <tag or <tag attr="value">
+            const openingTagMatch = trimmed.match(/^<([a-zA-Z][a-zA-Z0-9_-]*)[\s>]/);
+
+            // Check for closing tag: </tag>
+            const closingTagMatch = trimmed.match(/^<\/([a-zA-Z][a-zA-Z0-9_-]*)>$/);
+
+            // Check if line ends with /> (multi-line self-closing tag end)
+            const endsWithSelfClosing = trimmed.endsWith('/>');
+
+            // Check if line ends with > (opening tag complete on this line)
+            const endsWithClosingBracket = trimmed.endsWith('>') && !endsWithSelfClosing && !closingTagMatch;
+
+            const currentSingleLineSelfClosingTag = singleLineSelfClosingMatch ? singleLineSelfClosingMatch[1] : null;
+            const currentOpeningTag = openingTagMatch && !singleLineSelfClosingMatch && !closingTagMatch ? openingTagMatch[1] : null;
+            const currentClosingTag = closingTagMatch ? closingTagMatch[1] : null;
+
+            // Add blank line BEFORE opening tag or self-closing tag of specified tags
+            if (currentOpeningTag && this.options.odooSpacingTags.includes(currentOpeningTag)) {
+                const lastLine = result[result.length - 1];
+                if (lastLine !== undefined && lastLine.trim() !== '') {
+                    result.push('');
+                }
+
+                // Track if this is a self-closing multi-line tag
+                const isSelfClosing = endsWithSelfClosing;
+                tagStack.push({ tag: currentOpeningTag, startLine: result.length, isSelfClosing });
+            } else if (currentSingleLineSelfClosingTag && this.options.odooSpacingTags.includes(currentSingleLineSelfClosingTag)) {
+                const lastLine = result[result.length - 1];
+                if (lastLine !== undefined && lastLine.trim() !== '') {
+                    result.push('');
+                }
+            }
+
+            result.push(line);
+
+            // Check if current line completes a multi-line tag (either /> or > without being start of tag)
+            if (endsWithSelfClosing && tagStack.length > 0 && !currentOpeningTag) {
+                // This is the end of a multi-line self-closing tag
+                const lastTag = tagStack[tagStack.length - 1];
+                if (this.options.odooSpacingTags.includes(lastTag.tag)) {
+                    if (i + 1 < lines.length) {
+                        const nextLine = lines[i + 1].trim();
+                        if (nextLine !== '') {
+                            result.push('');
+                        }
+                    }
+                }
+                tagStack.pop();
+            } else if (endsWithClosingBracket && tagStack.length > 0 && !currentOpeningTag) {
+                // This is the end of a multi-line opening tag (not self-closing)
+                const lastTag = tagStack[tagStack.length - 1];
+                lastTag.isSelfClosing = false; // Confirm it's not self-closing
+            }
+
+            // Add blank line AFTER closing tag </tag> of specified tags
+            if (currentClosingTag && this.options.odooSpacingTags.includes(currentClosingTag)) {
+                if (i + 1 < lines.length) {
+                    const nextLine = lines[i + 1].trim();
+                    if (nextLine !== '') {
+                        result.push('');
+                    }
+                }
+                // Remove from stack
+                for (let j = tagStack.length - 1; j >= 0; j--) {
+                    if (tagStack[j].tag === currentClosingTag) {
+                        tagStack.splice(j, 1);
+                        break;
+                    }
+                }
+            }
+
+            // Add blank line AFTER single-line self-closing tag
+            if (currentSingleLineSelfClosingTag && this.options.odooSpacingTags.includes(currentSingleLineSelfClosingTag)) {
+                if (i + 1 < lines.length) {
+                    const nextLine = lines[i + 1].trim();
+                    if (nextLine !== '') {
+                        result.push('');
+                    }
+                }
+            }
+
+            // Add blank line AFTER self-closing tag that was opened and closed in same line (handled by currentOpeningTag)
+            if (currentOpeningTag && this.options.odooSpacingTags.includes(currentOpeningTag) && endsWithSelfClosing) {
+                if (i + 1 < lines.length) {
+                    const nextLine = lines[i + 1].trim();
+                    if (nextLine !== '') {
+                        result.push('');
+                    }
+                }
+                tagStack.pop(); // Remove since it's complete
+            }
+        }
+
+        return result.join('\n');
+    }    /**
      * Validate XML syntax before formatting
      */
     public validateXml(xmlContent: string): { isValid: boolean; error?: string } {
@@ -379,7 +503,9 @@ export class XmlFormatter {
             sortAttributes: false,
             selfClosingTags: true,
             closeTagOnNewLine: false,
-            preserveComments: true
+            preserveComments: true,
+            odooTagSpacing: true,
+            odooSpacingTags: ['record', 'menuitem']
         };
     }
 }

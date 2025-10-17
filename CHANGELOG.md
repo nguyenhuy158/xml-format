@@ -6,7 +6,26 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-## [0.0.7] - 2025-10-17
+# Change Log
+
+All notable changes to the "xml-formater" extension will be documented in this file.
+
+## [0.0.8] - 2025-10-17
+
+### Added
+- **Odoo Tag Spacing**: New feature to automatically add blank lines between important Odoo tags
+  - Added `odooTagSpacing` setting (default: `true`) to enable/disable the feature
+  - Added `odooSpacingTags` setting with default tags: `['record', 'menuitem', 'template', 'function', 'delete', 'report']`
+  - Tags in the spacing list will have at least one blank line after them
+  - Improves readability for large Odoo XML files
+  - Fully customizable - add or remove tags from the list based on your workflow
+- Comprehensive test suite for Odoo tag spacing functionality
+- Documentation and examples in README
+
+### Changed
+- Updated default formatting behavior for Odoo XML files to include tag spacing
+
+## [0.0.7] - 2025-10-16
 
 ### Added
 - **Comment Preservation**: New `preserveComments` option to control XML comment handling (default: `true`)

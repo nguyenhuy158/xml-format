@@ -19,7 +19,9 @@ export class ConfigManager {
             sortAttributes: config.get<boolean>('sortAttributes', false),
             selfClosingTags: config.get<boolean>('selfClosingTags', true),
             closeTagOnNewLine: config.get<boolean>('closeTagOnNewLine', false),
-            preserveComments: config.get<boolean>('preserveComments', true)
+            preserveComments: config.get<boolean>('preserveComments', true),
+            odooTagSpacing: config.get<boolean>('odooTagSpacing', true),
+            odooSpacingTags: config.get<string[]>('odooSpacingTags', ['odoo', 'data', 'record', 'form', 'tree', 'kanban', 'search', 'calendar', 'pivot', 'graph', 'group', 'notebook', 'page', 'button', 'header', 'sheet', 'xpath', 'menuitem', 'act_window', 'report', 'template', 't', 'function', 'delete'])
         };
     }
 
