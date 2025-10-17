@@ -1,0 +1,12 @@
+<odoo>
+    <menuitem id="transfer_agreement_menu" name="Transfer" parent="agreement.agreement_menu_root" sequence="5" action="transfer_agreement_action" groups="agreement.read" />
+    <record id="view_transfer_form" model="ir.ui.view">
+        <field name="name">transfer.form</field>
+        <field name="model">transfer.model</field>
+        <field name="arch" type="xml">
+            <form string="Transfer">
+                <field name="partner_id" domain="[('active','=',True)]" context="{'default_type':'contact'}" required="1"/>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -96,6 +96,11 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Enable Odoo-specific XML formatting rules"
+                },
+                "xml-formater.closeTagOnNewLine": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Put closing tag '/>' on a new line when formatting attributes on separate lines"
                 }
             }
         }

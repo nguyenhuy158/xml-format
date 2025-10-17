@@ -8,6 +8,7 @@ export interface XmlFormatterOptions {
     formatAttributes: boolean;
     sortAttributes: boolean;
     selfClosingTags: boolean;
+    closeTagOnNewLine: boolean;
 }
 
 export class XmlFormatter {
@@ -22,6 +23,7 @@ export class XmlFormatter {
             formatAttributes: false,
             sortAttributes: false,
             selfClosingTags: true,
+            closeTagOnNewLine: false,
             ...options
         };
     }
@@ -319,7 +321,13 @@ export class XmlFormatter {
             result += `\n${attrIndent}${attr.name}="${attr.value}"`;
         }
 
-        result += `${selfClosing}>`;
+        // Put closing tag on new line if option is enabled
+        if (this.options.closeTagOnNewLine) {
+            result += `\n${baseIndent}${selfClosing}>`;
+        } else {
+            result += `${selfClosing}>`;
+        }
+
         return result;
     }
 
@@ -364,7 +372,8 @@ export class XmlFormatter {
             preserveAttributes: true,
             formatAttributes: false,
             sortAttributes: false,
-            selfClosingTags: true
+            selfClosingTags: true,
+            closeTagOnNewLine: false
         };
     }
 }
