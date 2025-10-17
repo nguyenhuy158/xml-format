@@ -336,6 +336,18 @@ export class XmlFormatter {
                 const tagNameMatch = tag.match(/^<([^\s>\/]+)/);
                 const tagName = tagNameMatch ? tagNameMatch[1] : '';
 
+                // CRITICAL FIX: Only format attributes for self-closing tags or tags without content on same line
+                // This prevents breaking tags like <attribute name="attrs">{'invisible': ...}</attribute>
+                // where the content after > is important and shouldn't be separated
+                const isSelfClosing = tag.includes('/>');
+                const hasContentOnSameLine = line.includes(`>${tag}`) || line.match(/<[^>]+>[^<]/);
+
+                // Skip formatting if tag has content on the same line (not self-closing)
+                if (hasContentOnSameLine && !isSelfClosing) {
+                    result.push(line);
+                    continue;
+                }
+
                 // Check if current line exceeds maxLineLength
                 if (line.length > this.options.maxLineLength) {
                     // Parse tag to extract tag name and attributes

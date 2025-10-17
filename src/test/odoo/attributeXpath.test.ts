@@ -36,9 +36,9 @@ suite('Odoo Attribute XPath Test Suite', () => {
         assert.ok(result.includes('<?xml version="1.0" encoding="utf-8"?>'), 'Should preserve XML declaration');
 
         // Should contain all xpath elements
-        assert.ok(result.includes('<xpath expr="//button[@name=\'action_close\']" position="before">'), 
+        assert.ok(result.includes('<xpath expr="//button[@name=\'action_close\']" position="before">'),
             'Should have first xpath with before position');
-        assert.ok(result.includes('<xpath expr="//button[@name=\'action_close\']" position="attributes">'), 
+        assert.ok(result.includes('<xpath expr="//button[@name=\'action_close\']" position="attributes">'),
             'Should have second xpath with attributes position');
 
         // Should contain attribute tags with name="attrs"
@@ -46,7 +46,7 @@ suite('Odoo Attribute XPath Test Suite', () => {
         assert.strictEqual(attributeMatches?.length, 3, 'Should have exactly 3 attribute tags');
 
         // Should preserve the long attrs value without breaking it
-        assert.ok(result.includes("{'invisible': ['|', '|', '|', '|', ('is_return', '=', True)"), 
+        assert.ok(result.includes("{'invisible': ['|', '|', '|', '|', ('is_return', '=', True)"),
             'Should preserve long attrs value');
 
         // Should have proper closing tags
@@ -73,7 +73,7 @@ suite('Odoo Attribute XPath Test Suite', () => {
 
         // Should contain the attribute tag with shorter value
         assert.ok(result.includes('<attribute name="attrs">'), 'Should have attribute tag');
-        assert.ok(result.includes("{'invisible': [('state', '=', 'done')]}"), 
+        assert.ok(result.includes("{'invisible': [('state', '=', 'done')]}"),
             'Should preserve short attrs value');
         assert.ok(result.includes('</attribute>'), 'Should have closing attribute tag');
     });
@@ -97,11 +97,11 @@ suite('Odoo Attribute XPath Test Suite', () => {
 
         // Should contain all three attribute tags
         const attributeMatches = result.match(/<attribute name=/g);
-        assert.ok(attributeMatches && attributeMatches.length >= 3, 
+        assert.ok(attributeMatches && attributeMatches.length >= 3,
             'Should have at least 3 attribute tags');
 
         // Should preserve all attribute values
-        assert.ok(result.includes("{'invisible': [('state', '=', 'draft')]}"), 
+        assert.ok(result.includes("{'invisible': [('state', '=', 'draft')]}"),
             'Should preserve attrs value');
         assert.ok(result.includes('btn-primary'), 'Should preserve class value');
         assert.ok(result.includes('Execute Action'), 'Should preserve string value');
@@ -125,12 +125,12 @@ suite('Odoo Attribute XPath Test Suite', () => {
         });
 
         // Should preserve nested structure
-        assert.ok(result.includes('<xpath expr="//form" position="inside">'), 
+        assert.ok(result.includes('<xpath expr="//form" position="inside">'),
             'Should have outer xpath');
-        assert.ok(result.includes('<xpath expr="//field[@name=\'partner_id\']" position="attributes">'), 
+        assert.ok(result.includes('<xpath expr="//field[@name=\'partner_id\']" position="attributes">'),
             'Should have inner xpath');
         assert.ok(result.includes('<attribute name="attrs">'), 'Should have attribute tag');
-        assert.ok(result.includes("{'required': [('state', 'in', ['confirmed', 'done'])]}"), 
+        assert.ok(result.includes("{'required': [('state', 'in', ['confirmed', 'done'])]}"),
             'Should preserve attrs value with array');
     });
 });

@@ -10,9 +10,9 @@
 | Formatting | 5 | General formatting features |
 | Configuration | 3 | Extension configuration and settings |
 | Validation | 1 | Smart validation features |
-| Odoo-Specific | 3 | Odoo menuitem and xpath attribute formatting |
+| Odoo-Specific | 4 | Odoo menuitem and xpath attribute formatting |
 | Other | 0 | Tests that don't fit existing groups |
-| **TOTAL** | **21** | **Across 8 feature groups** |
+| **TOTAL** | **22** | **Across 8 feature groups** |
 
 ---
 
@@ -60,12 +60,13 @@
 |-----------|-------------|
 | `validation/smartValidation.test.ts` | Smart validation features |
 
-### Odoo-Specific Tests (3)
+### Odoo-Specific Tests (4)
 | Test File | Description |
 |-----------|-------------|
 | `odoo/menuitemMultiline.test.ts` | Odoo menuitem multiline formatting |
 | `odoo/menuitemSpacing.test.ts` | Odoo menuitem spacing rules |
 | `odoo/attributeXpath.test.ts` | Odoo xpath attribute tag with long attrs values |
+| `odoo/complexAttrs.test.ts` | Complex Odoo attrs with nested quotes, brackets, and domain expressions |
 
 ---
 
