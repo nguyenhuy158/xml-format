@@ -13,14 +13,28 @@ This is a VS Code extension project for formatting XML files, specifically desig
 ### Package Configuration
 - **`package.json`**: Defines extension metadata, commands, activation events, and build scripts
 - Key sections: `contributes.commands`, `activationEvents`, `main` (points to compiled JS)
-- Current command: `xml-formater.helloWorld` (placeholder - needs XML formatting implementation)
-
-### Build System
+- Current commands:
+  - `xml-formater.formatDocument`: Main XML formatting command
+  - `xml-formater.testFormatter`: Test XML formatter functionality### Build System
 - TypeScript compilation: `src/` → `out/` directory
 - Build commands: `npm run compile` (one-time), `npm run watch` (continuous)
 - The watch task is configured as the default build task in `.vscode/tasks.json`
 
 ## Development Workflows
+
+### Command Naming Convention
+Commands should follow these patterns:
+- **Command ID**: `{extensionName}.{actionName}` (using dot separator)
+- **Command Title**: `xml-formater: {Action Description}` (using colon prefix)
+- **Extension Name**: `xml-formater` (matches package.json name)
+- **Action Names**: Use camelCase for command IDs
+  - Examples: `formatDocument`, `testFormatter`, `formatSelection`
+- **Current Commands**:
+  - Command: `xml-formater.formatDocument`, Title: `xml-formater: Format Document`
+  - Command: `xml-formater.testFormatter`, Title: `xml-formater: Test Formatter`
+- **Command Registration**: Must be registered in both:
+  - `package.json` contributes.commands section (for UI/command palette)
+  - `src/extension.ts` using `vscode.commands.registerCommand()`
 
 ### Building & Testing
 ```bash
@@ -54,13 +68,35 @@ npm run publish       # Publish to marketplace (requires vsce auth)
 - Current tests are placeholder - need actual XML formatting test cases
 
 ### Missing Implementation
-The extension currently only shows "Hello World" messages. To implement XML formatting:
-1. Add XML parsing/formatting logic to `src/extension.ts`
-2. Register proper command (replace or supplement `xml-formater.helloWorld`)
+The extension has basic XML formatting implemented. For additional features:
+1. Add more XML formatting options (indentation, attribute formatting, etc.)
+2. Add new commands following the naming pattern: `xml-formater.{actionName}`
 3. Add configuration options in `package.json` contributes.configuration
 4. Consider adding keybindings for common formatting actions
 
-## Key Files for Changes
+## Command Implementation Pattern
+
+### Adding New Commands
+1. **Define in package.json**:
+```json
+{
+  "command": "xml-formater.newCommand",
+  "title": "xml-formater: New Command Title"
+}
+```
+
+2. **Register in extension.ts**:
+```typescript
+const newCommand = vscode.commands.registerCommand(
+    "xml-formater.newCommand",
+    async () => {
+        // Command implementation
+    }
+);
+context.subscriptions.push(newCommand);
+```
+
+3. **Follow naming convention**: `xml-formater.{camelCaseActionName}`## Key Files for Changes
 - **`src/extension.ts`**: Add XML formatting commands and logic
 - **`package.json`**: Update commands, add configuration settings
 - **`src/test/extension.test.ts`**: Add XML formatting test cases

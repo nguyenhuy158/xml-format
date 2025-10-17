@@ -20,11 +20,11 @@
         "commands": [
             {
                 "command": "xml-formater.formatDocument",
-                "title": "Format XML Document"
+                "title": "xml-formater: Format Document"
             },
             {
                 "command": "xml-formater.testFormatter",
-                "title": "Test XML Formatter"
+                "title": "xml-formater: Test Formatter"
             }
         ]
     },
