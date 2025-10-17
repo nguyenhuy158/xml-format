@@ -1,4 +1,4 @@
-# xml-format
+# xml-formater
 
 Just using for format xml in Odoo.
 
