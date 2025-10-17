@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <form string="Partners">
+                <sheet>
+                    <field name="name" placeholder="Enter name here with a very long text that makes the line exceed maximum length"/>
+
+                    <field name="email" widget="email" options="{'some_option': true, 'another_option': 'value', 'third_option': 'another_value'}"/>
+                    <button name="action_submit" string="Submit" type="object" class="btn-primary" icon="fa-check" attrs="{'invisible': [('state', '=', 'done')]}"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -75,6 +75,12 @@ This extension contributes the following settings:
 ### Line Length & Attributes
 * `xml-formater.maxLineLength`: Maximum line length before wrapping (default: `120`, range: 80-200)
 * `xml-formater.formatAttributes`: Format attributes on separate lines when line exceeds maxLineLength (default: `false`)
+  - When enabled, tags with total line length > maxLineLength will have attributes on separate lines
+  - Each attribute gets its own line with proper indentation
+* `xml-formater.closeTagOnNewLine`: Put closing tag `/>` on a new line for multi-line formatted tags (default: `false`)
+  - Only affects tags formatted on multiple lines (when formatAttributes is true and line exceeds maxLineLength)
+  - When `false`: `/>` stays on same line as last attribute
+  - When `true`: `/>` goes on new line with same indentation as opening `<`
 * `xml-formater.sortAttributes`: Sort attributes alphabetically by name (default: `false`)
 * `xml-formater.preserveAttributes`: Preserve attribute order and formatting (default: `true`)
 
@@ -110,6 +116,38 @@ Access these commands via Command Palette (`Cmd+Shift+P` or `Ctrl+Shift+P`):
 - `xml-formater: Show Configuration` - Display current configuration
 - `xml-formater: Debug Output Channel` - Open debug output panel
 - `xml-formater: Test Format On Save` - Test format on save functionality
+
+### Example: Closing Tag Position for Long Lines
+
+When a line with multiple attributes exceeds `maxLineLength`, the formatter automatically breaks it into multiple lines. The `closeTagOnNewLine` setting controls where the closing `/>` is placed:
+
+**Original (long line):**
+```xml
+<field name="mobile" widget="phone" options="{'enable_sms': true, 'country_code': 'VN'}" placeholder="Enter mobile number" required="True"/>
+```
+
+**With `closeTagOnNewLine: false` (default):**
+```xml
+<field
+    name="mobile"
+    widget="phone"
+    options="{'enable_sms': true, 'country_code': 'VN'}"
+    placeholder="Enter mobile number"
+    required="True"/>
+```
+
+**With `closeTagOnNewLine: true`:**
+```xml
+<field
+    name="mobile"
+    widget="phone"
+    options="{'enable_sms': true, 'country_code': 'VN'}"
+    placeholder="Enter mobile number"
+    required="True"
+/>
+```
+
+**Note:** This setting only affects tags that are formatted on multiple lines due to exceeding `maxLineLength`. Short single-line tags are not affected.
 
 ### Example: Attribute Sorting
 

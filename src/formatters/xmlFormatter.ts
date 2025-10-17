@@ -185,9 +185,6 @@ export class XmlFormatter {
         const lines = xml.split('\n');
         const result: string[] = [];
 
-        // Tags that should always stay inline (common Odoo XML inline elements)
-        const inlineTags = ['attribute', 'field', 'button', 'label', 'filter'];
-
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
 
@@ -206,12 +203,6 @@ export class XmlFormatter {
                 // Parse tag to extract tag name
                 const tagNameMatch = tag.match(/^<([^\s>\/]+)/);
                 const tagName = tagNameMatch ? tagNameMatch[1] : '';
-
-                // Keep inline tags always on one line, regardless of length
-                if (inlineTags.includes(tagName)) {
-                    result.push(line);
-                    continue;
-                }
 
                 // Check if current line exceeds maxLineLength
                 if (line.length > this.options.maxLineLength) {
