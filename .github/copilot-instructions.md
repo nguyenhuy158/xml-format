@@ -1,5 +1,14 @@
 # Copilot Instructions for xml-formater
 
+## Communication Style
+- Keep responses SHORT and DIRECT - no lengthy summaries or explanations unless asked
+- Just do the work, then report what was done in 1-2 sentences
+- No emoji overload, no "Perfect! 🎉", no "Let's do this!"
+- Skip phrases like "Tôi hiểu vấn đề rồi!", "Tuyệt vời!", "Hoàn thành!"
+- Don't create summary files (FIX-SUMMARY.md, etc.) unless explicitly requested
+- Don't repeat information the user already knows
+- Answer in Vietnamese when user asks in Vietnamese, English when user asks in English
+
 ## Project Overview
 This is a VS Code extension project for formatting XML files, specifically designed for Odoo development workflows. The extension is built using TypeScript and follows standard VS Code Extension API patterns.
 
