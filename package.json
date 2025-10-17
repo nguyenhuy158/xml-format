@@ -134,7 +134,10 @@
         "lint": "eslint src",
         "test": "vscode-test",
         "package": "vsce package",
-        "publish": "vsce publish"
+        "publish": "vsce publish",
+        "pub:patch": "npx vsce publish patch",
+        "pub:minor": "npx vsce publish minor",
+        "pub:major": "npx vsce publish major"
     },
     "devDependencies": {
         "@types/mocha": "^10.0.10",
