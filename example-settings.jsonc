@@ -1,0 +1,40 @@
+{
+    // XML Formater Extension Configuration Examples
+    
+    // Basic formatting options
+    "xml-formater.indentSize": 2,              // Number of spaces/tabs for indentation (1-8)
+    "xml-formater.indentType": "spaces",       // "spaces" or "tabs"
+    "xml-formater.maxLineLength": 120,         // Maximum line length (80-200)
+    
+    // Attribute formatting
+    "xml-formater.preserveAttributes": true,   // Keep original attribute order
+    "xml-formater.formatAttributes": false,    // Put attributes on separate lines
+    
+    // Element formatting  
+    "xml-formater.selfClosingTags": true,      // Use <element/> instead of <element></element>
+    
+    // Automatic formatting
+    "xml-formater.formatOnSave": false,        // Auto-format when saving XML files
+    
+    // Odoo-specific features
+    "xml-formater.odooSpecific": true,         // Enable Odoo XML formatting rules
+    
+    // Example configurations for different preferences:
+    
+    // For compact formatting:
+    // "xml-formater.indentSize": 2,
+    // "xml-formater.indentType": "spaces",
+    // "xml-formater.selfClosingTags": true,
+    
+    // For readable formatting:  
+    // "xml-formater.indentSize": 4,
+    // "xml-formater.indentType": "spaces", 
+    // "xml-formater.formatAttributes": true,
+    
+    // For tab users:
+    // "xml-formater.indentType": "tabs",
+    // "xml-formater.indentSize": 1,
+    
+    // For auto-format on save:
+    // "xml-formater.formatOnSave": true
+}
