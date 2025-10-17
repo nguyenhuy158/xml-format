@@ -7,9 +7,9 @@
         "url": "https://github.com/nguyenhuy158/xml-formater.git"
     },
     "publisher": "nguyenhuy158",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "engines": {
-        "vscode": "^1.105.0"
+        "vscode": "^1.102.0"
     },
     "categories": [
         "Other"
@@ -36,8 +36,8 @@
     },
     "devDependencies": {
         "@types/mocha": "^10.0.10",
-        "@types/node": "22.x",
-        "@types/vscode": "^1.105.0",
+        "@types/node": "^22.18.11",
+        "@types/vscode": "^1.102.0",
         "@typescript-eslint/eslint-plugin": "^8.45.0",
         "@typescript-eslint/parser": "^8.45.0",
         "@vscode/test-cli": "^0.0.11",
@@ -46,6 +46,7 @@
         "typescript": "^5.9.3"
     },
     "dependencies": {
+        "fast-xml-parser": "^5.3.0",
         "vsce": "^2.15.0"
     }
 }
