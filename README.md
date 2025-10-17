@@ -7,8 +7,11 @@ A VS Code extension for formatting XML files, specifically designed for Odoo dev
 - **Smart XML Formatting**: Automatically format XML with proper indentation and structure
 - **Smart Validation**: Validate XML before formatting with detailed error messages
   - Shows line number and content where error occurs
+  - **Highlights error line** with red background in editor
+  - **Auto-scrolls** to error location
   - Prevents formatting invalid XML files
   - User-friendly error popups with Vietnamese support
+  - Customizable highlight duration
 - **Format on Save**: Optionally format XML files automatically when saving
 - **Flexible Configuration Hierarchy**: Support for `.xmlformatterrc` file, workspace settings, and user settings
 - **Attribute Management**:
@@ -90,6 +93,12 @@ This extension contributes the following settings:
   - Improves readability for large Odoo XML files
   - Customize the list to include only the tags important to your workflow
 
+### Smart Validation Settings
+* `xml-formater.highlightErrorDuration`: Duration in milliseconds to highlight error lines (default: `5000`, range: 1000-30000)
+  - Controls how long error lines are highlighted with red background
+  - Auto-clears when editing document or switching files
+  - Set higher value for more time to read the error
+
 ## Usage
 
 ### Commands
@@ -144,13 +153,19 @@ The formatter automatically:
 
 ### Example: Smart Validation
 
-The Smart Validation feature validates XML before formatting and shows detailed error messages:
+The Smart Validation feature validates XML before formatting and shows detailed error messages with visual highlighting:
 
 **Invalid XML (missing closing tag):**
 ```xml
 <field name="email"
 <!-- Missing closing tag -->
 ```
+
+**What happens:**
+1. ⚠️ Popup warning appears with error details
+2. 🔴 **Error line is highlighted with red background**
+3. 📍 **Editor auto-scrolls to the error location**
+4. ❌ Error message shows: "Expected closing tag 'field' (cột 5)"
 
 **Error Popup:**
 ```
@@ -162,10 +177,19 @@ The Smart Validation feature validates XML before formatting and shows detailed 
 ❌ Lỗi: Expected closing tag 'field' (cột 5)
 ```
 
+**Visual Features:**
+- Red background highlight on error line
+- Red border on the left side
+- Red marker in overview ruler (scrollbar area)
+- Auto-clear after 5 seconds (customizable)
+- Clears immediately when you edit the document
+
 Benefits:
 - Prevents formatting invalid XML
 - Shows exact line number and column of error
 - Displays problematic line content (first 20 chars)
+- **Visual highlighting makes error easy to spot**
+- **Auto-scroll saves time searching for error**
 - No file changes when validation fails
 
 For more details, see [SMART-VALIDATION.md](SMART-VALIDATION.md)

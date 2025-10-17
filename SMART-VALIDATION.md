@@ -24,7 +24,15 @@ Khi phát hiện lỗi, popup cảnh báo hiển thị:
 - Nội dung dòng bị lỗi (giới hạn 20 ký tự + "...")
 - ❌ Mô tả chi tiết lỗi (bao gồm cột nếu có)
 
-### 4. Không format khi có lỗi
+### 4. Highlight Error Range (New!)
+- **Tự động highlight dòng lỗi** trong editor với màu đỏ nhạt
+- **Border màu đỏ bên trái** để dễ nhận biết
+- **Tự động scroll** đến dòng lỗi
+- **Overview ruler marker** để dễ dàng nhìn thấy vị trí lỗi trong file
+- **Tự động clear highlight** sau 5 giây (có thể tùy chỉnh)
+- **Clear khi edit** hoặc chuyển file khác
+
+### 5. Không format khi có lỗi
 - File không bị thay đổi khi validation thất bại
 - Giữ nguyên nội dung để người dùng sửa lỗi
 
@@ -61,16 +69,40 @@ Popup hiển thị:
 ### Format Document Command
 1. Mở file XML
 2. Chạy command: `xml-formater: Format Document`
-3. Nếu XML không hợp lệ, popup cảnh báo hiển thị phía dưới bên phải
+3. Nếu XML không hợp lệ:
+   - Popup cảnh báo hiển thị phía dưới bên phải
+   - **Dòng lỗi được highlight màu đỏ nhạt**
+   - **Editor tự động scroll đến dòng lỗi**
 4. Nếu hợp lệ, file được format tự động
 
 ### Format on Save
 1. Bật `xml-formater.formatOnSave` trong settings
 2. Lưu file XML
 3. Validation tự động chạy
-4. Chỉ format nếu XML hợp lệ
+4. Nếu có lỗi, dòng lỗi được highlight
+5. Chỉ format nếu XML hợp lệ
+
+### Tùy chỉnh Highlight Duration
+Thay đổi thời gian hiển thị highlight trong settings:
+```json
+{
+  "xml-formater.highlightErrorDuration": 5000  // milliseconds (1000-30000)
+}
+```
 
 ## Implementation Details
+
+### Highlight Decoration
+```typescript
+const errorLineDecorationType = vscode.window.createTextEditorDecorationType({
+    backgroundColor: 'rgba(255, 0, 0, 0.15)',  // Màu đỏ nhạt
+    border: '1px solid rgba(255, 0, 0, 0.8)',  // Border đỏ
+    borderWidth: '0 0 0 3px',                  // Chỉ border bên trái
+    isWholeLine: true,                          // Highlight cả dòng
+    overviewRulerColor: 'rgba(255, 0, 0, 0.8)', // Marker trên overview ruler
+    overviewRulerLane: vscode.OverviewRulerLane.Left
+});
+```
 
 ### Validation Flow
 ```typescript
@@ -80,11 +112,19 @@ Popup hiển thị:
    - Trích xuất line number, column number
    - Lấy nội dung dòng lỗi (max 20 chars)
    - Hiển thị popup warning
+   - Highlight dòng lỗi trong editor
+   - Scroll đến dòng lỗi
+   - Auto-clear highlight sau N giây
    - Return [] (không format)
 4. Nếu hợp lệ:
    - Tiếp tục format
    - Return formatted content
 ```
+
+### Auto-clear Behavior
+- Highlight tự động clear sau duration được cấu hình (default: 5s)
+- Clear ngay khi user edit document
+- Clear khi chuyển sang file khác
 
 ### Error Information Structure
 ```typescript
@@ -114,8 +154,26 @@ Test cases:
 
 1. **Ngăn chặn lỗi**: Không làm hỏng file khi XML sai cú pháp
 2. **Thông báo rõ ràng**: Người dùng biết chính xác lỗi ở đâu
-3. **Tiết kiệm thời gian**: Không cần tự tìm lỗi trong file lớn
-4. **UX tốt hơn**: Popup thân thiện, dễ hiểu
+3. **Visual feedback**: Highlight màu đỏ giúp dễ nhận biết vị trí lỗi
+4. **Auto-scroll**: Tự động di chuyển đến dòng lỗi, không cần tìm kiếm
+5. **Tiết kiệm thời gian**: Không cần tự tìm lỗi trong file lớn
+6. **UX tốt hơn**: Popup thân thiện, highlight trực quan, dễ hiểu
+7. **Customizable**: Có thể tùy chỉnh thời gian hiển thị highlight
+
+## Settings
+
+### xml-formater.highlightErrorDuration
+- **Type**: `number`
+- **Default**: `5000`
+- **Range**: `1000` - `30000` (milliseconds)
+- **Description**: Thời gian hiển thị highlight cho dòng lỗi (ms)
+
+Example:
+```json
+{
+  "xml-formater.highlightErrorDuration": 10000  // 10 seconds
+}
+```
 
 ## Notes
 

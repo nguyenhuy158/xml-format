@@ -59,6 +59,12 @@ async function formatXmlDocument(document: vscode.TextDocument): Promise<vscode.
             // Show warning popup at bottom right
             vscode.window.showWarningMessage(warningMessage);
 
+            // Highlight error line in editor if available
+            const editor = vscode.window.activeTextEditor;
+            if (editor && editor.document === document && validation.line !== undefined) {
+                highlightErrorLine(editor, validation.line);
+            }
+
             return [];
         }
 
@@ -140,6 +146,56 @@ function getOutputChannel(): vscode.OutputChannel {
     return outputChannel;
 }
 
+/**
+ * Decoration type for highlighting error lines
+ */
+const errorLineDecorationType = vscode.window.createTextEditorDecorationType({
+    backgroundColor: 'rgba(255, 0, 0, 0.15)',
+    border: '1px solid rgba(255, 0, 0, 0.8)',
+    borderWidth: '0 0 0 3px',
+    isWholeLine: true,
+    overviewRulerColor: 'rgba(255, 0, 0, 0.8)',
+    overviewRulerLane: vscode.OverviewRulerLane.Left
+});
+
+/**
+ * Highlight error line in editor
+ */
+function highlightErrorLine(editor: vscode.TextEditor, lineNumber: number, customDuration?: number) {
+    if (lineNumber < 1 || lineNumber > editor.document.lineCount) {
+        return;
+    }
+
+    // Get highlight duration from settings or use custom/default value
+    const config = vscode.workspace.getConfiguration('xml-formater');
+    const durationMs = customDuration ?? config.get<number>('highlightErrorDuration', 5000);
+
+    // Convert to 0-based line number
+    const line = lineNumber - 1;
+    const range = editor.document.lineAt(line).range;
+
+    // Apply decoration
+    editor.setDecorations(errorLineDecorationType, [range]);
+
+    // Scroll to error line
+    editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
+
+    // Clear decoration after duration
+    setTimeout(() => {
+        editor.setDecorations(errorLineDecorationType, []);
+    }, durationMs);
+}
+
+/**
+ * Clear all error line highlights
+ */
+function clearErrorHighlights() {
+    const editor = vscode.window.activeTextEditor;
+    if (editor) {
+        editor.setDecorations(errorLineDecorationType, []);
+    }
+}
+
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -176,6 +232,16 @@ export function activate(context: vscode.ExtensionContext) {
     rcFileWatcher.onDidDelete(() => {
         ConfigManager.clearRcCache();
         logAllSettings(".xmlformatterrc file deleted");
+    });
+
+    // Clear error highlights when document changes
+    const documentChangeListener = vscode.workspace.onDidChangeTextDocument(event => {
+        clearErrorHighlights();
+    });
+
+    // Clear error highlights when switching editors
+    const editorChangeListener = vscode.window.onDidChangeActiveTextEditor(editor => {
+        clearErrorHighlights();
     });
 
     // Register format on save listener
@@ -269,6 +335,12 @@ export function activate(context: vscode.ExtensionContext) {
                     warningMessage += `\n\n❌ Lỗi: ${errorMsg}`;
 
                     vscode.window.showWarningMessage(warningMessage);
+
+                    // Highlight error line in editor
+                    if (validation.line !== undefined) {
+                        highlightErrorLine(editor, validation.line);
+                    }
+
                     return;
                 }
 
@@ -469,7 +541,9 @@ To change these settings:
         testFormatOnSaveCommand,
         configurationChangeListener,
         formatOnSaveListener,
-        rcFileWatcher
+        rcFileWatcher,
+        documentChangeListener,
+        editorChangeListener
     );
 }
 

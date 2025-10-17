@@ -122,6 +122,13 @@
                         "menuitem"
                     ],
                     "description": "List of XML tags that should have one blank line before and after the entire element"
+                },
+                "xml-formater.highlightErrorDuration": {
+                    "type": "number",
+                    "default": 5000,
+                    "minimum": 1000,
+                    "maximum": 30000,
+                    "description": "Duration in milliseconds to highlight error lines (default: 5000ms)"
                 }
             }
         }

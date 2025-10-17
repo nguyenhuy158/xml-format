@@ -14,14 +14,23 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
   - User-friendly warning popups in Vietnamese
   - Prevents formatting when XML is invalid
   - Checks if file content is actually XML before processing
+- **Highlight Error Range**: Visual error highlighting in editor
+  - **Red background highlight** on error lines
+  - **Red left border** for easy identification
+  - **Auto-scroll** to error location
+  - **Overview ruler marker** for quick navigation
+  - **Auto-clear** after configurable duration (default: 5s)
+  - **Smart clearing**: Auto-clears when editing or switching files
+  - New setting: `xml-formater.highlightErrorDuration` (1000-30000ms)
 - Unit tests for Smart Validation feature
 - Documentation: SMART-VALIDATION.md
 - Test files: test-smart-validation.js, test-validation-demo.xml
 
 ### Changed
-- Updated formatXmlDocument() to validate XML before formatting
-- Updated formatDocument command to show detailed validation errors
+- Updated formatXmlDocument() to validate XML and highlight errors
+- Updated formatDocument command to show detailed validation errors with highlighting
 - Enhanced validateXml() to return detailed error information (line, column, content)
+- Added document change and editor change listeners to auto-clear highlights
 
 ## [0.0.8] - 2025-10-17
 
