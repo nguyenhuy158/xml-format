@@ -6,6 +6,19 @@
 	"search.exclude": {
 		"out": true // set this to false to include "out" folder in search results
 	},
+	"files.associations": {
+		".env*": "dotenv",
+		"node_modules/**": "node_modules"
+	},
+	"github.copilot.enable": {
+		"*": true,
+		"dotenv": false,
+		"node_modules": false,
+		"plaintext": false,
+		"properties": false,
+		".env": false
+	},
+	"github.copilot.nextEditSuggestions.enabled": true,
 	// Turn off tsc task auto detection since we have the necessary tasks as npm scripts
 	"typescript.tsc.autoDetect": "off",
 	"[typescript]": {
@@ -14,6 +27,7 @@
 		"prettier.tabWidth": 4
 	},
 	"[json]": {
+		"editor.formatOnSave": true,
 		"editor.defaultFormatter": "esbenp.prettier-vscode",
 		"editor.tabSize": 4,
 		"prettier.tabWidth": 4,
