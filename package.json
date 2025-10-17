@@ -7,7 +7,7 @@
         "url": "https://github.com/nguyenhuy158/xml-formater.git"
     },
     "publisher": "nguyenhuy158",
-    "version": "0.0.9",
+    "version": "1.0.0",
     "engines": {
         "vscode": "^1.102.0"
     },
