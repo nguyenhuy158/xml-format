@@ -135,9 +135,10 @@
         "test": "vscode-test",
         "package": "vsce package",
         "publish": "vsce publish",
-        "pub:patch": "npx vsce publish patch",
-        "pub:minor": "npx vsce publish minor",
-        "pub:major": "npx vsce publish major",
+        "prepublish": "npm test",
+        "pub:patch": "npm test && npx vsce publish patch",
+        "pub:minor": "npm test && npx vsce publish minor",
+        "pub:major": "npm test && npx vsce publish major",
         "git:tag": "git push origin --tags"
     },
     "devDependencies": {
