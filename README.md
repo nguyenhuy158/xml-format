@@ -5,6 +5,10 @@ A VS Code extension for formatting XML files, specifically designed for Odoo dev
 ## Features
 
 - **Smart XML Formatting**: Automatically format XML with proper indentation and structure
+- **Smart Validation**: Validate XML before formatting with detailed error messages
+  - Shows line number and content where error occurs
+  - Prevents formatting invalid XML files
+  - User-friendly error popups with Vietnamese support
 - **Format on Save**: Optionally format XML files automatically when saving
 - **Flexible Configuration Hierarchy**: Support for `.xmlformatterrc` file, workspace settings, and user settings
 - **Attribute Management**:
@@ -137,6 +141,34 @@ The formatter automatically:
 - Preserves `'` in double-quoted attributes (doesn't convert to `&apos;`)
 - Uses single quotes for attributes containing double quotes for better readability
 - Decodes unnecessary entities in text content
+
+### Example: Smart Validation
+
+The Smart Validation feature validates XML before formatting and shows detailed error messages:
+
+**Invalid XML (missing closing tag):**
+```xml
+<field name="email"
+<!-- Missing closing tag -->
+```
+
+**Error Popup:**
+```
+⚠️ XML không hợp lệ - Không thể format
+
+📍 Dòng 10:
+"<field name="email..."
+
+❌ Lỗi: Expected closing tag 'field' (cột 5)
+```
+
+Benefits:
+- Prevents formatting invalid XML
+- Shows exact line number and column of error
+- Displays problematic line content (first 20 chars)
+- No file changes when validation fails
+
+For more details, see [SMART-VALIDATION.md](SMART-VALIDATION.md)
 
 ### Example: Odoo Tag Spacing
 

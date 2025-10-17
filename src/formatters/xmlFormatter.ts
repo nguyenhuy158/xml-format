@@ -1,4 +1,4 @@
-import { XMLParser, XMLBuilder } from 'fast-xml-parser';
+import { XMLParser, XMLBuilder, XMLValidator } from 'fast-xml-parser';
 
 export interface XmlFormatterOptions {
     indentSize: number;
@@ -462,19 +462,78 @@ export class XmlFormatter {
     }    /**
      * Validate XML syntax before formatting
      */
-    public validateXml(xmlContent: string): { isValid: boolean; error?: string } {
+    public validateXml(xmlContent: string): { isValid: boolean; error?: string; line?: number; lineContent?: string } {
         try {
+            // Use XMLValidator for strict validation
+            const validationResult = XMLValidator.validate(xmlContent, {
+                allowBooleanAttributes: true
+            });
+
+            if (validationResult !== true) {
+                // validationResult is an error object when validation fails
+                const error = validationResult as any;
+                const errorMessage = error.err?.msg || 'Unknown validation error';
+                const lineNumber = error.err?.line;
+                const columnNumber = error.err?.col;
+
+                let lineContent: string | undefined;
+                if (lineNumber !== undefined) {
+                    const lines = xmlContent.split('\n');
+                    if (lineNumber > 0 && lineNumber <= lines.length) {
+                        const fullLineContent = lines[lineNumber - 1].trim();
+                        // Truncate to 20 characters and add ellipsis if longer
+                        lineContent = fullLineContent.length > 20
+                            ? fullLineContent.substring(0, 20) + '...'
+                            : fullLineContent;
+                    }
+                }
+
+                // Build detailed error message
+                let detailedError = errorMessage;
+                if (columnNumber !== undefined) {
+                    detailedError += ` (cột ${columnNumber})`;
+                }
+
+                return {
+                    isValid: false,
+                    error: detailedError,
+                    line: lineNumber,
+                    lineContent
+                };
+            }
+
+            // Double-check by trying to parse
             const parser = new XMLParser({
                 ignoreAttributes: false,
                 stopNodes: ['*.#text'],
                 commentPropName: this.options.preserveComments ? '#comment' : undefined
             });
             parser.parse(xmlContent);
+
             return { isValid: true };
         } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Unknown validation error';
+
+            // Try to extract line number from error message
+            const lineMatch = errorMessage.match(/(?:line|Line)\s*(\d+)/i);
+            const lineNumber = lineMatch ? parseInt(lineMatch[1], 10) : undefined;
+
+            let lineContent: string | undefined;
+            if (lineNumber !== undefined) {
+                const lines = xmlContent.split('\n');
+                if (lineNumber > 0 && lineNumber <= lines.length) {
+                    const fullLineContent = lines[lineNumber - 1].trim();
+                    lineContent = fullLineContent.length > 20
+                        ? fullLineContent.substring(0, 20) + '...'
+                        : fullLineContent;
+                }
+            }
+
             return {
                 isValid: false,
-                error: error instanceof Error ? error.message : 'Unknown validation error'
+                error: errorMessage,
+                line: lineNumber,
+                lineContent
             };
         }
     }
@@ -521,7 +580,7 @@ export function formatXml(xmlContent: string, options?: Partial<XmlFormatterOpti
 /**
  * Validate XML content
  */
-export function validateXml(xmlContent: string): { isValid: boolean; error?: string } {
+export function validateXml(xmlContent: string): { isValid: boolean; error?: string; line?: number; lineContent?: string } {
     const formatter = new XmlFormatter();
     return formatter.validateXml(xmlContent);
 }

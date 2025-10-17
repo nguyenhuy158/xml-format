@@ -1,0 +1,47 @@
+<!-- Test file for Smart Validation Demo -->
+<!-- Uncomment different sections to test validation -->
+
+<!-- VALID XML - Should format successfully -->
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="name"/>
+                <field name="email"/>
+            </form>
+        </field>
+    </record>
+</odoo>
+
+<!-- INVALID XML - Missing closing tag -->
+<!-- Uncomment to test:
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="test" model="ir.ui.view">
+        <field name="name">Test
+    </record>
+</odoo>
+-->
+
+<!-- INVALID XML - Malformed attribute -->
+<!-- Uncomment to test:
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="test" model="ir.ui.view">
+        <field name="email"
+    </record>
+</odoo>
+-->
+
+<!-- INVALID XML - Unclosed tag with long content -->
+<!-- Uncomment to test:
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="test_very_long_record_id_with_many_characters_that_will_be_truncated" model="ir.ui.view">
+        <field name="name">Test</field
+    </record>
+</odoo>
+-->

@@ -25,6 +25,14 @@ async function formatXmlDocument(document: vscode.TextDocument): Promise<vscode.
             return [];
         }
 
+        // Check if content looks like XML
+        if (!XmlFormatter.isXmlContent(xmlContent)) {
+            const warningMsg = `⚠️ File này không phải là XML hợp lệ - Không thể format`;
+            outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] ${warningMsg}`);
+            vscode.window.showWarningMessage(warningMsg);
+            return [];
+        }
+
         // Get formatting options from configuration
         const options = ConfigManager.getFormatterOptions();
         outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Format options: ${JSON.stringify(options)}`);
@@ -35,8 +43,22 @@ async function formatXmlDocument(document: vscode.TextDocument): Promise<vscode.
         // Validate XML first
         const validation = formatter.validateXml(xmlContent);
         if (!validation.isValid) {
-            outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Format on save failed - Invalid XML: ${validation.error}`);
-            console.error(`Format on save failed - Invalid XML: ${validation.error}`);
+            const errorMsg = validation.error || 'Unknown validation error';
+            outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Format failed - Invalid XML: ${errorMsg}`);
+
+            // Build detailed error message for popup
+            let warningMessage = `⚠️ XML không hợp lệ - Không thể format`;
+            if (validation.line !== undefined) {
+                warningMessage += `\n\n📍 Dòng ${validation.line}`;
+                if (validation.lineContent) {
+                    warningMessage += `:\n"${validation.lineContent}"`;
+                }
+            }
+            warningMessage += `\n\n❌ Lỗi: ${errorMsg}`;
+
+            // Show warning popup at bottom right
+            vscode.window.showWarningMessage(warningMessage);
+
             return [];
         }
 
@@ -219,6 +241,12 @@ export function activate(context: vscode.ExtensionContext) {
                     return;
                 }
 
+                // Check if content looks like XML
+                if (!XmlFormatter.isXmlContent(xmlContent)) {
+                    vscode.window.showWarningMessage("⚠️ File này không phải là XML hợp lệ - Không thể format");
+                    return;
+                }
+
                 // Get formatting options from configuration
                 const options = ConfigManager.getFormatterOptions();
 
@@ -228,7 +256,19 @@ export function activate(context: vscode.ExtensionContext) {
                 // Validate XML first
                 const validation = formatter.validateXml(xmlContent);
                 if (!validation.isValid) {
-                    vscode.window.showErrorMessage(`Invalid XML: ${validation.error}`);
+                    const errorMsg = validation.error || 'Unknown validation error';
+
+                    // Build detailed error message for popup
+                    let warningMessage = `⚠️ XML không hợp lệ - Không thể format`;
+                    if (validation.line !== undefined) {
+                        warningMessage += `\n\n📍 Dòng ${validation.line}`;
+                        if (validation.lineContent) {
+                            warningMessage += `:\n"${validation.lineContent}"`;
+                        }
+                    }
+                    warningMessage += `\n\n❌ Lỗi: ${errorMsg}`;
+
+                    vscode.window.showWarningMessage(warningMessage);
                     return;
                 }
 

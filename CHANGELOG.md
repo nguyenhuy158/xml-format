@@ -6,9 +6,22 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-# Change Log
+### Added
+- **Smart Validation**: Comprehensive XML validation before formatting
+  - Validates XML syntax using XMLValidator from fast-xml-parser
+  - Shows detailed error messages with line number and column
+  - Displays problematic line content (truncated to 20 chars)
+  - User-friendly warning popups in Vietnamese
+  - Prevents formatting when XML is invalid
+  - Checks if file content is actually XML before processing
+- Unit tests for Smart Validation feature
+- Documentation: SMART-VALIDATION.md
+- Test files: test-smart-validation.js, test-validation-demo.xml
 
-All notable changes to the "xml-formater" extension will be documented in this file.
+### Changed
+- Updated formatXmlDocument() to validate XML before formatting
+- Updated formatDocument command to show detailed validation errors
+- Enhanced validateXml() to return detailed error information (line, column, content)
 
 ## [0.0.8] - 2025-10-17
 
