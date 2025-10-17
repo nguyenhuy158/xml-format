@@ -94,6 +94,10 @@ export class XmlFormatter {
             return trimmedAttrs ? `<?xml ${trimmedAttrs}?>` : '<?xml?>';
         });
 
+        // Decode unnecessary XML entities in attribute values
+        // We want to keep &apos; as ' and &quot; as " when they're inside the opposite quote type
+        result = this.decodeAttributeEntities(result);
+
         // Apply custom attribute formatting based on line length after initial formatting
         if (this.options.formatAttributes) {
             result = this.formatAttributesBasedOnLineLength(result);
@@ -109,6 +113,52 @@ export class XmlFormatter {
         if (!result.endsWith('\n')) {
             result += '\n';
         }
+
+        return result;
+    }
+
+    /**
+     * Decode unnecessary XML entities in attribute values
+     * Keep the original quote style and decode entities that don't need to be escaped
+     *
+     * Note: In XML spec, quotes inside attribute values MUST be escaped if they match
+     * the wrapping quote. However, for Odoo XML files (especially XPath expressions),
+     * we prefer readability and use the opposite quote style to avoid escaping.
+     */
+    private decodeAttributeEntities(xml: string): string {
+        // Match attributes with double quotes
+        let result = xml.replace(/(\w+)="([^"]*?)"/g, (match, attrName, attrValue) => {
+            // In double-quoted attributes, &apos; doesn't need to be escaped
+            let decodedValue = attrValue.replace(/&apos;/g, "'");
+
+            // If the value contains &quot;, it means there were double quotes in the original
+            // We should convert to single-quote wrapping for better readability in Odoo/XPath
+            if (attrValue.includes('&quot;')) {
+                decodedValue = decodedValue.replace(/&quot;/g, '"');
+                // Re-wrap with single quotes if value contains double quotes
+                return `${attrName}='${decodedValue}'`;
+            }
+
+            return `${attrName}="${decodedValue}"`;
+        });
+
+        // Match attributes with single quotes (less common but possible)
+        result = result.replace(/(\w+)='([^']*?)'/g, (match, attrName, attrValue) => {
+            // In single-quoted attributes, &quot; doesn't need to be escaped
+            let decodedValue = attrValue.replace(/&quot;/g, '"');
+            return `${attrName}='${decodedValue}'`;
+        });
+
+        // Also decode entities in text content between tags
+        // This handles cases like <field>text with &apos; entity</field>
+        result = result.replace(/>([^<]+)</g, (match, textContent) => {
+            let decoded = textContent;
+            // Decode &apos; in text content (it doesn't need to be escaped)
+            decoded = decoded.replace(/&apos;/g, "'");
+            // Decode &quot; in text content (it doesn't need to be escaped)
+            decoded = decoded.replace(/&quot;/g, '"');
+            return `>${decoded}<`;
+        });
 
         return result;
     }
@@ -188,7 +238,9 @@ export class XmlFormatter {
                 i++;
             }
 
-            if (i >= attributesStr.length) break;
+            if (i >= attributesStr.length) {
+                break;
+            }
 
             // Parse attribute name
             let nameStart = i;
@@ -196,7 +248,9 @@ export class XmlFormatter {
                 i++;
             }
 
-            if (i === nameStart) break; // No valid attribute name found
+            if (i === nameStart) {
+                break; // No valid attribute name found
+            }
 
             const name = attributesStr.substring(nameStart, i);
 
@@ -205,11 +259,15 @@ export class XmlFormatter {
                 i++;
             }
 
-            if (i >= attributesStr.length) break;
+            if (i >= attributesStr.length) {
+                break;
+            }
 
             // Parse attribute value
             const quote = attributesStr[i];
-            if (quote !== '"' && quote !== "'") break; // No valid quote found
+            if (quote !== '"' && quote !== "'") {
+                break; // No valid quote found
+            }
 
             i++; // Skip opening quote
             let value = '';

@@ -1,0 +1,10 @@
+<odoo>
+    <!-- Test various quote scenarios -->
+    <record id="test1">
+        <field name="domain">[('name', '=', 'test')]</field>
+        <field name="domain2">[("name", "=", "test")]</field>
+        <field name="mixed">It's a "test" value</field>
+        <xpath expr="//field[@name='partner_id']" position="before"/>
+        <xpath expr='//field[@name="partner_id"]' position="after"/>
+    </record>
+</odoo>

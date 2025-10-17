@@ -4,6 +4,26 @@ All notable changes to the "xml-formater" extension will be documented in this f
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [Unreleased]
+
+### Fixed
+- **Quote Entity Handling**: Fixed issue where single quotes (`'`) in XPath expressions and Odoo domains were being converted to `&apos;` entities
+- **Smart Quote Selection**: Attributes containing double quotes now automatically use single-quote wrapping for better readability
+- Text content entities (`&apos;` and `&quot;`) are now properly decoded for cleaner output
+
+### Examples
+Before fix:
+```xml
+<xpath expr="//field[@name=&apos;partner_id&apos;]" position="before"/>
+<field name="domain">[(&apos;name&apos;, &apos;=&apos;, &apos;test&apos;)]</field>
+```
+
+After fix:
+```xml
+<xpath expr="//field[@name='partner_id']" position="before"/>
+<field name="domain">[('name', '=', 'test')]</field>
+```
+
 ## [0.0.4] - 2025-10-17
 
 ### Added

@@ -10,6 +10,7 @@ A VS Code extension for formatting XML files, specifically designed for Odoo dev
   - Break long lines with many attributes into separate lines
   - Sort attributes alphabetically for consistent code style
   - Preserve or reorganize attribute order based on your preferences
+- **Intelligent Quote Handling**: Preserves single and double quotes in XPath expressions and Odoo domains without converting to HTML entities
 - **Odoo-Specific Formatting**: Special formatting rules for Odoo XML files
 - **Customizable Settings**: Flexible configuration options for indentation, line length, and more
 
@@ -60,6 +61,29 @@ Access these commands via Command Palette (`Cmd+Shift+P` or `Ctrl+Shift+P`):
   name="Test"
   priority="high">
 ```
+
+### Example: Quote Preservation in XPath and Odoo Domains
+
+The formatter intelligently handles quotes in XPath expressions and Odoo domains, avoiding unnecessary HTML entity conversion:
+
+**Before formatting:**
+```xml
+<xpath expr="//field[@name='partner_id']" position="before">
+    <field name="domain">[('name', '=', 'test')]</field>
+</xpath>
+```
+
+**After formatting** (quotes are preserved, not converted to `&apos;`):
+```xml
+<xpath expr="//field[@name='partner_id']" position="before">
+    <field name="domain">[('name', '=', 'test')]</field>
+</xpath>
+```
+
+The formatter automatically:
+- Preserves `'` in double-quoted attributes (doesn't convert to `&apos;`)
+- Uses single quotes for attributes containing double quotes for better readability
+- Decodes unnecessary entities in text content
 
 ## Requirements
 
