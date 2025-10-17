@@ -3,8 +3,63 @@
 import * as vscode from "vscode";
 import { testXmlFormatter } from "./test/xmlFormatterTest";
 import { testConfiguration, testConfigurationChangeLogging } from "./test/configTest";
+import { testFormatOnSave, demonstrateFormatOnSaveSettings } from "./test/formatOnSaveTest";
+import { testAttributeFormatting } from "./test/attributeTest";
 import { XmlFormatter } from "./formatters/xmlFormatter";
 import { ConfigManager } from "./utils/config";
+
+/**
+ * Format XML document content
+ */
+async function formatXmlDocument(document: vscode.TextDocument): Promise<vscode.TextEdit[]> {
+    const outputChannel = getOutputChannel();
+
+    try {
+        outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Starting format for: ${document.fileName}`);
+
+        const xmlContent = document.getText();
+
+        if (!xmlContent.trim()) {
+            outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Document is empty, skipping format`);
+            return [];
+        }
+
+        // Get formatting options from configuration
+        const options = ConfigManager.getFormatterOptions();
+        outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Format options: ${JSON.stringify(options)}`);
+
+        // Create formatter and format XML
+        const formatter = new XmlFormatter(options);
+
+        // Validate XML first
+        const validation = formatter.validateXml(xmlContent);
+        if (!validation.isValid) {
+            outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Format on save failed - Invalid XML: ${validation.error}`);
+            console.error(`Format on save failed - Invalid XML: ${validation.error}`);
+            return [];
+        }
+
+        outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] XML validation passed, formatting...`);
+
+        // Format the XML
+        const formattedXml = formatter.formatXml(xmlContent);
+
+        // Return text edit for the entire document
+        const fullRange = new vscode.Range(
+            document.positionAt(0),
+            document.positionAt(xmlContent.length)
+        );
+
+        outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Format completed successfully`);
+        return [vscode.TextEdit.replace(fullRange, formattedXml)];
+
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Format on save failed: ${errorMessage}`);
+        console.error(`Format on save failed: ${errorMessage}`);
+        return [];
+    }
+}
 
 /**
  * Log all XML-formater settings to console and output channel
@@ -65,19 +120,57 @@ function getOutputChannel(): vscode.OutputChannel {
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-    // Use the console to output diagnostic information (console.log) and errors (console.error)
-    // This line of code will only be executed once when your extension is activated
-    console.log('Congratulations, your extension "xml-formater" is now active!');
+    console.log('XML-Formater extension is now active!');
+
+    // Get output channel and log activation
+    const outputChannel = getOutputChannel();
+    outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] === XML-Formater Extension Activated ===`);
+    outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Extension version: 0.0.3`);
 
     // Log initial configuration
-    logAllSettings("Extension activated");
+    logAllSettings("Extension activation");
 
-    // Register configuration change listener
+    // Register all configuration change listener
     const configurationChangeListener = vscode.workspace.onDidChangeConfiguration(event => {
         // Check if xml-formater configuration was changed
         if (event.affectsConfiguration('xml-formater')) {
             logAllSettings("Configuration changed by user");
         }
+    });
+
+    // Register format on save listener
+    const formatOnSaveListener = vscode.workspace.onWillSaveTextDocument(event => {
+        // Get output channel for debugging
+        const outputChannel = getOutputChannel();
+
+        // Check if format on save is enabled
+        const formatOnSave = ConfigManager.getFormatOnSave();
+        outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Format on save check: ${formatOnSave}`);
+
+        if (!formatOnSave) {
+            outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Format on save is disabled, skipping`);
+            return;
+        }
+
+        // Check if document is XML
+        const document = event.document;
+        const isXmlFile = document.languageId === 'xml' || document.fileName.endsWith('.xml');
+
+        outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] File: ${document.fileName}`);
+        outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Language ID: ${document.languageId}`);
+        outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Is XML file: ${isXmlFile}`);
+
+        if (!isXmlFile) {
+            outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Not an XML file, skipping format on save`);
+            return;
+        }
+
+        outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Format on save triggered for: ${document.fileName}`);
+        console.log(`Format on save triggered for: ${document.fileName}`);
+
+        // Create a thenable to format the document
+        const formatPromise = formatXmlDocument(document);
+        event.waitUntil(formatPromise);
     });
 
     // Register XML Format Document command
@@ -153,8 +246,11 @@ export function activate(context: vscode.ExtensionContext) {
             const xmlTestResult = testXmlFormatter();
             const configTestResult = testConfiguration();
             const changeLoggingResult = await testConfigurationChangeLogging();
+            const formatOnSaveResult = testFormatOnSave();
+            const attributeTestResult = testAttributeFormatting();
+            demonstrateFormatOnSaveSettings();
 
-            if (xmlTestResult && configTestResult && changeLoggingResult) {
+            if (xmlTestResult && configTestResult && changeLoggingResult && formatOnSaveResult && attributeTestResult) {
                 vscode.window.showInformationMessage(
                     "All tests completed successfully! Check console and Output panel for details."
                 );
@@ -235,7 +331,78 @@ To change these settings:
         }
     );
 
-    context.subscriptions.push(formatCommand, testCommand, showConfigCommand, debugOutputCommand, configurationChangeListener);
+    // Register test format on save command
+    const testFormatOnSaveCommand = vscode.commands.registerCommand(
+        "xml-formater.testFormatOnSave",
+        async () => {
+            const editor = vscode.window.activeTextEditor;
+            const outputChannel = getOutputChannel();
+
+            outputChannel.clear();
+            outputChannel.appendLine('=== Testing Format On Save ===');
+            outputChannel.appendLine(`Timestamp: ${new Date().toLocaleString()}`);
+
+            if (!editor) {
+                outputChannel.appendLine('ERROR: No active editor found');
+                vscode.window.showErrorMessage("No active editor found. Please open an XML file.");
+                return;
+            }
+
+            const document = editor.document;
+            outputChannel.appendLine(`File: ${document.fileName}`);
+            outputChannel.appendLine(`Language ID: ${document.languageId}`);
+
+            // Check format on save setting
+            const formatOnSave = ConfigManager.getFormatOnSave();
+            outputChannel.appendLine(`Format on save enabled: ${formatOnSave}`);
+
+            // Check if XML file
+            const isXmlFile = document.languageId === 'xml' || document.fileName.endsWith('.xml');
+            outputChannel.appendLine(`Is XML file: ${isXmlFile}`);
+
+            if (!isXmlFile) {
+                outputChannel.appendLine('ERROR: Current file is not XML');
+                vscode.window.showErrorMessage("Current file is not XML");
+                return;
+            }
+
+            if (!formatOnSave) {
+                outputChannel.appendLine('WARNING: Format on save is disabled');
+                vscode.window.showWarningMessage("Format on save is disabled. Enable it in settings.");
+                return;
+            }
+
+            // Test the formatting
+            outputChannel.appendLine('Testing format function...');
+
+            try {
+                const edits = await formatXmlDocument(document);
+                outputChannel.appendLine(`Format result: ${edits.length} edits to apply`);
+
+                if (edits.length > 0) {
+                    // Apply edits
+                    await editor.edit(editBuilder => {
+                        edits.forEach(edit => {
+                            editBuilder.replace(edit.range, edit.newText);
+                        });
+                    });
+                    outputChannel.appendLine('Format applied successfully!');
+                    vscode.window.showInformationMessage("Format on save test completed successfully!");
+                } else {
+                    outputChannel.appendLine('No formatting changes needed');
+                    vscode.window.showInformationMessage("No formatting changes needed");
+                }
+            } catch (error) {
+                const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+                outputChannel.appendLine(`ERROR: ${errorMsg}`);
+                vscode.window.showErrorMessage(`Format test failed: ${errorMsg}`);
+            }
+
+            outputChannel.show(true);
+        }
+    );
+
+    context.subscriptions.push(formatCommand, testCommand, showConfigCommand, debugOutputCommand, testFormatOnSaveCommand, configurationChangeListener, formatOnSaveListener);
 }
 
 // This method is called when your extension is deactivated

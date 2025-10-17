@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <!-- This line should be broken down because it's too long -->
+    <record id="very_long_record_name_that_makes_line_too_long" model="some.very.long.model.name" context="{'key1': 'very_long_value_1', 'key2': 'very_long_value_2'}" active="true">
+        <field name="name">Test Name</field>
+    </record>
+
+    <!-- This line should stay on one line because it's short -->
+    <record id="short" model="test.model">
+        <field name="name">Short</field>
+    </record>
+</root>

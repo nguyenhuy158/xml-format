@@ -14,7 +14,9 @@
     "categories": [
         "Other"
     ],
-    "activationEvents": [],
+    "activationEvents": [
+        "onLanguage:xml"
+    ],
     "main": "./out/extension.js",
     "contributes": {
         "commands": [
@@ -33,6 +35,10 @@
             {
                 "command": "xml-formater.debugOutput",
                 "title": "xml-formater: Debug Output Channel"
+            },
+            {
+                "command": "xml-formater.testFormatOnSave",
+                "title": "xml-formater: Test Format On Save"
             }
         ],
         "configuration": {
@@ -47,7 +53,10 @@
                 },
                 "xml-formater.indentType": {
                     "type": "string",
-                    "enum": ["spaces", "tabs"],
+                    "enum": [
+                        "spaces",
+                        "tabs"
+                    ],
                     "default": "spaces",
                     "description": "Type of indentation to use"
                 },

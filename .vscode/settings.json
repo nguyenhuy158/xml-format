@@ -35,5 +35,14 @@
 			"strings": true
 		},
 		"editor.suggest.insertMode": "replace"
+	},
+	// XML Formater extension settings
+	"xml-formater.formatOnSave": true,
+	"xml-formater.formatAttributes": true,
+	"xml-formater.maxLineLength": 120,
+	"xml-formater.indentSize": 2,
+	"xml-formater.indentType": "spaces",
+	"[xml]": {
+		"editor.defaultFormatter": "nguyenhuy158.xml-formater"
 	}
 }

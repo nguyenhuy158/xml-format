@@ -42,6 +42,32 @@ export function testXmlFormatter() {
         console.log('Tab-indented XML:');
         console.log(formatted3);
 
+        // Test 5: Attribute formatting based on line length
+        console.log('\n5. Attribute formatting based on line length:');
+
+        // Long line that should be broken down
+        const longAttributeXml = `<record id="very_long_record_name_that_makes_line_too_long" model="some.very.long.model.name" context="{'key1': 'very_long_value_1', 'key2': 'very_long_value_2'}">content</record>`;
+
+        // Short line that should stay on one line
+        const shortAttributeXml = `<record id="short" model="test.model">content</record>`;
+
+        const formatterWithAttributes = new XmlFormatter({
+            formatAttributes: true,
+            maxLineLength: 80
+        });
+
+        console.log('Long line (should break attributes):');
+        console.log('Original length:', longAttributeXml.length);
+        const formattedLong = formatterWithAttributes.formatXml(longAttributeXml);
+        console.log('Formatted:');
+        console.log(formattedLong);
+
+        console.log('\nShort line (should stay on one line):');
+        console.log('Original length:', shortAttributeXml.length);
+        const formattedShort = formatterWithAttributes.formatXml(shortAttributeXml);
+        console.log('Formatted:');
+        console.log(formattedShort);
+
         console.log('\n=== All tests completed ===');
         return true;
     } catch (error) {
