@@ -73,12 +73,19 @@ npm run publish       # Publish to marketplace (requires vsce auth)
 
 ### Testing Structure
 - **ALL tests MUST be in `src/test/` directory** - no test files (.js, .xml) in project root
+- **ABSOLUTELY NO .js test files** - only TypeScript (.ts) files allowed
+- **NEVER create test files in root directory** - all tests go in `src/test/` only
 - Tests use Mocha framework with VS Code Test Runner (`.vscode-test.mjs`)
 - Test files follow pattern: `{feature}.test.ts` (e.g., `apostrophe.test.ts`, `commentPreservation.test.ts`)
 - Test XML samples should be embedded as strings in test files, NOT separate .xml files
 - Run tests via VS Code Test Runner (automatically compiles and runs)
-- **WRONG**: Creating `test-*.js` and `test-*.xml` files in root directory
-- **RIGHT**: Creating `src/test/{feature}.test.ts` with embedded XML strings
+- **WRONG**:
+  - Creating `test-*.js` files ANYWHERE (especially in root)
+  - Creating `test-*.xml` files in root directory
+  - Using JavaScript for tests
+- **RIGHT**:
+  - Creating `src/test/{feature}.test.ts` with embedded XML strings
+  - Using TypeScript only for all test files
 
 ### Test File Template
 ```typescript
