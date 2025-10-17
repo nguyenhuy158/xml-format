@@ -147,6 +147,27 @@ When a line with multiple attributes exceeds `maxLineLength`, the formatter auto
 />
 ```
 
+**This also works for opening tags (not self-closing):**
+
+```xml
+<!-- With closeTagOnNewLine: false -->
+<xpath
+    expr="//button[@name='action_view_delivery']"
+    position="attributes"
+    mode="extension">
+    <attribute name="invisible">1</attribute>
+</xpath>
+
+<!-- With closeTagOnNewLine: true -->
+<xpath
+    expr="//button[@name='action_view_delivery']"
+    position="attributes"
+    mode="extension"
+>
+    <attribute name="invisible">1</attribute>
+</xpath>
+```
+
 **Note:** This setting only affects tags that are formatted on multiple lines due to exceeding `maxLineLength`. Short single-line tags are not affected.
 
 ### Example: Attribute Sorting

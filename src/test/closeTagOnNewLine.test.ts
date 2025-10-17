@@ -117,4 +117,59 @@ suite('closeTagOnNewLine Test Suite', () => {
             assert.strictEqual(fieldIndent, closeIndent, 'Closing tag should have same indentation as opening tag');
         }
     });
+
+    test('Opening tags (not self-closing) with closeTagOnNewLine=false should have > on same line', () => {
+        const xml = `<?xml version="1.0"?>
+<root>
+    <xpath expr="//button[@name='action_view_delivery_and_picking_operations']" position="attributes" mode="extension">
+        <attribute name="invisible">1</attribute>
+    </xpath>
+</root>`;
+
+        const formatter = new XmlFormatter({
+            indentSize: 4,
+            formatAttributes: true,
+            maxLineLength: 80,
+            closeTagOnNewLine: false
+        });
+
+        const result = formatter.formatXml(xml);
+
+        // Should have multiline format with > on last attribute line
+        assert.ok(result.includes('mode="extension">'));
+        assert.ok(!result.match(/mode="extension"\s*\n\s*>/));
+    });
+
+    test('Opening tags (not self-closing) with closeTagOnNewLine=true should have > on new line', () => {
+        const xml = `<?xml version="1.0"?>
+<root>
+    <xpath expr="//button[@name='action_view_delivery_and_picking_operations']" position="attributes" mode="extension">
+        <attribute name="invisible">1</attribute>
+    </xpath>
+</root>`;
+
+        const formatter = new XmlFormatter({
+            indentSize: 4,
+            formatAttributes: true,
+            maxLineLength: 80,
+            closeTagOnNewLine: true
+        });
+
+        const result = formatter.formatXml(xml);
+
+        // Should have multiline format with > on new line
+        assert.ok(result.includes('mode="extension"'));
+        assert.ok(result.match(/mode="extension"\s*\n\s*>/));
+
+        // Check indentation of >
+        const lines = result.split('\n');
+        const xpathLine = lines.findIndex(line => line.includes('<xpath'));
+        const closeLine = lines.findIndex(line => line.trim() === '>');
+
+        if (xpathLine >= 0 && closeLine >= 0) {
+            const xpathIndent = lines[xpathLine].match(/^\s*/)?.[0].length || 0;
+            const closeIndent = lines[closeLine].match(/^\s*/)?.[0].length || 0;
+            assert.strictEqual(xpathIndent, closeIndent, 'Closing > should have same indentation as opening tag');
+        }
+    });
 });
