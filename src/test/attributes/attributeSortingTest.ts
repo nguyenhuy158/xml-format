@@ -1,4 +1,4 @@
-import { XmlFormatter } from '../formatters/xmlFormatter';
+import { XmlFormatter } from '../../formatters/xmlFormatter';
 
 // Test attribute sorting feature
 export function testAttributeSorting() {

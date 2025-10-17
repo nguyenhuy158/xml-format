@@ -1,4 +1,4 @@
-import { XmlFormatter, formatXml, validateXml } from '../formatters/xmlFormatter';
+import { XmlFormatter, formatXml, validateXml } from '../../formatters/xmlFormatter';
 
 // Test XML content
 const testXml = `<?xml version="1.0" encoding="UTF-8"?>

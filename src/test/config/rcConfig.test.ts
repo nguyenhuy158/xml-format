@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { ConfigManager } from '../utils/config';
+import { ConfigManager } from '../../utils/config';
 
 suite('RC Config Test Suite', () => {
     test('Should load .xmlformatterrc config', () => {

@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { formatXml } from '../formatters/xmlFormatter';
+import { formatXml } from '../../formatters/xmlFormatter';
 
 suite('Menuitem Spacing Test Suite', () => {
     test('Multi-line menuitem at the end should have proper spacing', () => {

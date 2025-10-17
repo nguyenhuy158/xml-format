@@ -3,7 +3,7 @@
  */
 
 import * as assert from 'assert';
-import { XmlFormatter } from '../formatters/xmlFormatter';
+import { XmlFormatter } from '../../formatters/xmlFormatter';
 
 suite('Smart Validation Test Suite', () => {
     test('Valid XML should pass validation', () => {

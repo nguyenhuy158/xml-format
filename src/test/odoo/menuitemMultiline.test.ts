@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { formatXml } from '../formatters/xmlFormatter';
+import { formatXml } from '../../formatters/xmlFormatter';
 
 suite('Multi-line Self-Closing Tag Test Suite', () => {
     test('Should format multi-line menuitem tag to single line with self-closing', () => {

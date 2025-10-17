@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { XmlFormatter } from '../formatters/xmlFormatter';
+import { XmlFormatter } from '../../formatters/xmlFormatter';
 
 suite('XPath Closing Tag Test Suite', () => {
     const testXml = `<?xml version="1.0"?>

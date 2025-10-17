@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { XmlFormatter } from '../formatters/xmlFormatter';
+import { XmlFormatter } from '../../formatters/xmlFormatter';
 
 suite('Special Comments Test Suite', () => {
     const formatter = new XmlFormatter({

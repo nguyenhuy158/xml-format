@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { XmlFormatter } from '../formatters/xmlFormatter';
+import { XmlFormatter } from '../../formatters/xmlFormatter';
 
 suite('Comprehensive Attribute Sorting Test Suite', () => {
     test('Basic attribute sorting', () => {

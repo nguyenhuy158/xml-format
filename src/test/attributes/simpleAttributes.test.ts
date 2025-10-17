@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { XmlFormatter } from '../formatters/xmlFormatter';
+import { XmlFormatter } from '../../formatters/xmlFormatter';
 
 suite('Simple Attribute Formatting Test Suite', () => {
     test('Long line should break attributes', () => {

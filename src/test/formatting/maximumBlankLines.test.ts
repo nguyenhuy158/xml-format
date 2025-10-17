@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { XmlFormatter } from '../formatters/xmlFormatter';
+import { XmlFormatter } from '../../formatters/xmlFormatter';
 
 suite('Maximum Blank Lines Test Suite', () => {
     test('Should limit consecutive blank lines to maximum (1)', () => {

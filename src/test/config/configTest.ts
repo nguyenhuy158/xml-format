@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { XmlFormatter } from '../formatters/xmlFormatter';
-import { ConfigManager } from '../utils/config';
+import { XmlFormatter } from '../../formatters/xmlFormatter';
+import { ConfigManager } from '../../utils/config';
 
 export function testConfiguration() {
     console.log('=== Testing XML Formatter Configuration ===');

@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { XmlFormatter } from '../formatters/xmlFormatter';
+import { XmlFormatter } from '../../formatters/xmlFormatter';
 
 suite('closeTagOnNewLine Test Suite', () => {
     test('Short single-line tags should not be affected', () => {

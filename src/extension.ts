@@ -1,11 +1,11 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
-import { testXmlFormatter } from "./test/xmlFormatterTest";
-import { testConfiguration, testConfigurationChangeLogging } from "./test/configTest";
-import { testFormatOnSave, demonstrateFormatOnSaveSettings } from "./test/formatOnSaveTest";
-import { testAttributeFormatting } from "./test/attributeTest";
-import { testAttributeSorting } from "./test/attributeSortingTest";
+import { testXmlFormatter } from "./test/core/xmlFormatterTest";
+import { testConfiguration, testConfigurationChangeLogging } from "./test/config/configTest";
+import { testFormatOnSave, demonstrateFormatOnSaveSettings } from "./test/config/formatOnSaveTest";
+import { testAttributeFormatting } from "./test/attributes/attributeTest";
+import { testAttributeSorting } from "./test/attributes/attributeSortingTest";
 import { XmlFormatter } from "./formatters/xmlFormatter";
 import { ConfigManager } from "./utils/config";
 

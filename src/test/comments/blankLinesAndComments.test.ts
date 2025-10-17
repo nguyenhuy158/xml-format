@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { XmlFormatter } from '../formatters/xmlFormatter';
+import { XmlFormatter } from '../../formatters/xmlFormatter';
 
 suite('Blank Lines and Comments Test Suite', () => {
     const testXml = `<?xml version="1.0" encoding="UTF-8"?>
