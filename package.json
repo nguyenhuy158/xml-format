@@ -19,8 +19,12 @@
     "contributes": {
         "commands": [
             {
-                "command": "xml-formater.helloWorld",
-                "title": "Hello World"
+                "command": "xml-formater.formatDocument",
+                "title": "Format XML Document"
+            },
+            {
+                "command": "xml-formater.testFormatter",
+                "title": "Test XML Formatter"
             }
         ]
     },

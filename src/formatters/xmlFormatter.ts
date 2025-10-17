@@ -87,8 +87,9 @@ export class XmlFormatter {
         let result = xml;
 
         // Ensure proper XML declaration formatting
-        result = result.replace(/^<\?xml([^>]*)\?>/, (match, attrs) => {
-            return `<?xml${attrs.trim()}>`;
+        result = result.replace(/^<\?xml([^>]*)\?>/m, (match, attrs) => {
+            const trimmedAttrs = attrs.trim();
+            return trimmedAttrs ? `<?xml ${trimmedAttrs}?>` : '<?xml?>';
         });
 
         // Fix empty lines and ensure consistent line endings
