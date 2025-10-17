@@ -7,7 +7,7 @@
         "url": "https://github.com/nguyenhuy158/xml-formater.git"
     },
     "publisher": "nguyenhuy158",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "engines": {
         "vscode": "^1.102.0"
     },
@@ -76,6 +76,11 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Format attributes on separate lines when they are many"
+                },
+                "xml-formater.sortAttributes": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Sort attributes alphabetically by name"
                 },
                 "xml-formater.selfClosingTags": {
                     "type": "boolean",

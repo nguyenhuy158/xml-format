@@ -16,6 +16,7 @@ export class ConfigManager {
             maxLineLength: config.get<number>('maxLineLength', 120),
             preserveAttributes: config.get<boolean>('preserveAttributes', true),
             formatAttributes: config.get<boolean>('formatAttributes', false),
+            sortAttributes: config.get<boolean>('sortAttributes', false),
             selfClosingTags: config.get<boolean>('selfClosingTags', true)
         };
     }
@@ -55,6 +56,7 @@ export class ConfigManager {
             maxLineLength: config.get('maxLineLength'),
             preserveAttributes: config.get('preserveAttributes'),
             formatAttributes: config.get('formatAttributes'),
+            sortAttributes: config.get('sortAttributes'),
             selfClosingTags: config.get('selfClosingTags'),
             formatOnSave: config.get('formatOnSave'),
             odooSpecific: config.get('odooSpecific')

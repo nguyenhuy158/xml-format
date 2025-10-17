@@ -1,51 +1,94 @@
 # xml-formater
 
-Just using for format xml in Odoo.
+A VS Code extension for formatting XML files, specifically designed for Odoo development workflows.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- **Smart XML Formatting**: Automatically format XML with proper indentation and structure
+- **Format on Save**: Optionally format XML files automatically when saving
+- **Attribute Management**:
+  - Break long lines with many attributes into separate lines
+  - Sort attributes alphabetically for consistent code style
+  - Preserve or reorganize attribute order based on your preferences
+- **Odoo-Specific Formatting**: Special formatting rules for Odoo XML files
+- **Customizable Settings**: Flexible configuration options for indentation, line length, and more
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
 This extension contributes the following settings:
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+### Indentation Settings
+* `xml-formater.indentSize`: Number of spaces or tabs for indentation (default: `2`, range: 1-8)
+* `xml-formater.indentType`: Type of indentation to use - `spaces` or `tabs` (default: `spaces`)
+
+### Line Length & Attributes
+* `xml-formater.maxLineLength`: Maximum line length before wrapping (default: `120`, range: 80-200)
+* `xml-formater.formatAttributes`: Format attributes on separate lines when line exceeds maxLineLength (default: `false`)
+* `xml-formater.sortAttributes`: Sort attributes alphabetically by name (default: `false`)
+* `xml-formater.preserveAttributes`: Preserve attribute order and formatting (default: `true`)
+
+### General Settings
+* `xml-formater.selfClosingTags`: Use self-closing tags for empty elements (default: `true`)
+* `xml-formater.formatOnSave`: Automatically format XML files when saving (default: `false`)
+* `xml-formater.odooSpecific`: Enable Odoo-specific XML formatting rules (default: `true`)
+
+## Usage
+
+### Commands
+
+Access these commands via Command Palette (`Cmd+Shift+P` or `Ctrl+Shift+P`):
+
+- `xml-formater: Format Document` - Format the current XML document
+- `xml-formater: Test Formatter` - Run formatter tests
+- `xml-formater: Show Configuration` - Display current configuration
+- `xml-formater: Debug Output Channel` - Open debug output panel
+- `xml-formater: Test Format On Save` - Test format on save functionality
+
+### Example: Attribute Sorting
+
+**Before (with `sortAttributes: true`):**
+```xml
+<record id="test_record" model="test.model" active="true" name="Test" priority="high">
+```
+
+**After:**
+```xml
+<record
+  active="true"
+  id="test_record"
+  model="test.model"
+  name="Test"
+  priority="high">
+```
+
+## Requirements
+
+- VS Code version 1.102.0 or higher
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- Complex nested JSON in attributes may need special handling
+- Very large XML files (>10MB) may have performance impacts
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 0.0.4
 
-### 1.0.0
+- Added attribute sorting feature (`sortAttributes`)
+- Improved attribute formatting based on line length
+- Enhanced debug logging and output channel
+- Better format on save support
 
-Initial release of ...
+### 0.0.3
 
-### 1.0.1
+- Added format on save functionality
+- Improved configuration management
+- Added test commands
 
-Fixed issue #.
+### 0.0.1
 
-### 1.1.0
-
-Added features X, Y, and Z.
+- Initial release
+- Basic XML formatting support
 
 ---
 

@@ -6,6 +6,7 @@ export interface XmlFormatterOptions {
     maxLineLength: number;
     preserveAttributes: boolean;
     formatAttributes: boolean;
+    sortAttributes: boolean;
     selfClosingTags: boolean;
 }
 
@@ -19,6 +20,7 @@ export class XmlFormatter {
             maxLineLength: 120,
             preserveAttributes: true,
             formatAttributes: false,
+            sortAttributes: false,
             selfClosingTags: true,
             ...options
         };
@@ -237,7 +239,12 @@ export class XmlFormatter {
         const attrIndent = baseIndent + this.getIndentString();
         let result = `${baseIndent}<${tagName}`;
 
-        for (const attr of attributes) {
+        // Sort attributes alphabetically if option is enabled
+        const attributesToFormat = this.options.sortAttributes
+            ? [...attributes].sort((a, b) => a.name.localeCompare(b.name))
+            : attributes;
+
+        for (const attr of attributesToFormat) {
             result += `\n${attrIndent}${attr.name}="${attr.value}"`;
         }
 
@@ -285,6 +292,7 @@ export class XmlFormatter {
             maxLineLength: 120,
             preserveAttributes: true,
             formatAttributes: false,
+            sortAttributes: false,
             selfClosingTags: true
         };
     }
