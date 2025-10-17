@@ -81,7 +81,8 @@ suite('Maximum Blank Lines Test Suite', () => {
         });
         const result = formatter.formatXml(xml);
 
-        const lines = result.split('\n');
+        // Split and filter out the last empty line (from trailing newline)
+        const lines = result.split('\n').slice(0, -1);
         let hasBlankLine = false;
 
         for (const line of lines) {

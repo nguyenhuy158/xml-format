@@ -72,9 +72,28 @@ npm run publish       # Publish to marketplace (requires vsce auth)
 - Target: ES2022, Module: Node16 for VS Code compatibility
 
 ### Testing Structure
-- Tests in `src/test/extension.test.ts` using Mocha framework
-- VS Code Test Runner configuration in `.vscode-test.mjs`
-- Current tests are placeholder - need actual XML formatting test cases
+- **ALL tests MUST be in `src/test/` directory** - no test files (.js, .xml) in project root
+- Tests use Mocha framework with VS Code Test Runner (`.vscode-test.mjs`)
+- Test files follow pattern: `{feature}.test.ts` (e.g., `apostrophe.test.ts`, `commentPreservation.test.ts`)
+- Test XML samples should be embedded as strings in test files, NOT separate .xml files
+- Run tests via VS Code Test Runner (automatically compiles and runs)
+- **WRONG**: Creating `test-*.js` and `test-*.xml` files in root directory
+- **RIGHT**: Creating `src/test/{feature}.test.ts` with embedded XML strings
+
+### Test File Template
+```typescript
+import * as assert from 'assert';
+import { formatXml } from '../../formatters/xmlFormatter';
+
+suite('Feature Name Test Suite', () => {
+    test('Test case description', () => {
+        const input = `<xml>test content</xml>`;
+        const expected = `<xml>\n    test content\n</xml>`;
+        const result = formatXml(input);
+        assert.strictEqual(result, expected);
+    });
+});
+```
 
 ### Missing Implementation
 The extension has basic XML formatting implemented. For additional features:

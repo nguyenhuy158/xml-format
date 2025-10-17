@@ -80,6 +80,23 @@ export class XmlFormatter {
             .filter(line => line.trim() !== '')
             .join('\n');
 
+        // If maximumBlankLines is 0, don't restore any blank lines
+        if (this.options.maximumBlankLines === 0) {
+            // Just remove the placeholder comments
+            const lines = result.split('\n');
+            const finalResult: string[] = [];
+
+            for (const line of lines) {
+                const trimmed = line.trim();
+                // Skip placeholder comments
+                if (!trimmed.match(/^<!--__BLANK_LINES_(\d+)__-->$/)) {
+                    finalResult.push(line);
+                }
+            }
+
+            return finalResult.join('\n');
+        }
+
         // Now restore blank lines from placeholders
         const lines = result.split('\n');
         const finalResult: string[] = [];
@@ -115,6 +132,12 @@ export class XmlFormatter {
      */
     public formatXml(xmlContent: string): string {
         try {
+            // Validate XML first
+            const validation = this.validateXml(xmlContent);
+            if (!validation.isValid) {
+                throw new Error(`XML formatting failed: ${validation.error}`);
+            }
+
             // Step 1: Preserve blank lines by replacing them with placeholder comments
             const xmlWithPlaceholders = this.preserveBlankLinesAsComments(xmlContent);
 
@@ -152,7 +175,7 @@ export class XmlFormatter {
                 suppressUnpairedNode: false,
                 textNodeName: '#text',
                 attributeNamePrefix: '@_',
-                commentPropName: '#comment'  // Always preserve comments
+                commentPropName: this.options.preserveComments ? '#comment' : undefined
             };
 
             // Build formatted XML
@@ -188,6 +211,11 @@ export class XmlFormatter {
             return trimmedAttrs ? `<?xml ${trimmedAttrs}?>` : '<?xml?>';
         });
 
+        // Remove comments if preserveComments is false
+        if (!this.options.preserveComments) {
+            result = this.removeComments(result);
+        }
+
         // Decode unnecessary XML entities in attribute values
         // We want to keep &apos; as ' and &quot; as " when they're inside the opposite quote type
         result = this.decodeAttributeEntities(result);
@@ -208,6 +236,18 @@ export class XmlFormatter {
             result += '\n';
         }
 
+        return result;
+    }
+
+    /**
+     * Remove all comments from XML
+     */
+    private removeComments(xml: string): string {
+        // Remove multi-line comments
+        let result = xml.replace(/<!--[\s\S]*?-->/g, '');
+
+        // Clean up any extra blank lines left by comment removal
+        // But preserve intentional blank lines (we'll handle those in restoreBlankLinesFromComments)
         return result;
     }
 
