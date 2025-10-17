@@ -1,0 +1,11 @@
+{
+    "tabSize": 2,
+    "useTabs": false,
+    "alignAttributes": true,
+    "sortAttributes": true,
+    "emptyElementHandling": "selfClosing",
+    "maxLineLength": 120,
+    "closeTagOnNewLine": false,
+    "preserveComments": true,
+    "odooTagSpacing": true
+}

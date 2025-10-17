@@ -6,6 +6,7 @@ A VS Code extension for formatting XML files, specifically designed for Odoo dev
 
 - **Smart XML Formatting**: Automatically format XML with proper indentation and structure
 - **Format on Save**: Optionally format XML files automatically when saving
+- **Flexible Configuration Hierarchy**: Support for `.xmlformatterrc` file, workspace settings, and user settings
 - **Attribute Management**:
   - Break long lines with many attributes into separate lines
   - Sort attributes alphabetically for consistent code style
@@ -13,6 +14,48 @@ A VS Code extension for formatting XML files, specifically designed for Odoo dev
 - **Intelligent Quote Handling**: Preserves single and double quotes in XPath expressions and Odoo domains without converting to HTML entities
 - **Odoo-Specific Formatting**: Special formatting rules for Odoo XML files
 - **Customizable Settings**: Flexible configuration options for indentation, line length, and more
+
+## Configuration Hierarchy
+
+The extension supports a three-level configuration hierarchy (from highest to lowest priority):
+
+1. **`.xmlformatterrc`** (highest priority) - Project-specific configuration file
+2. **Workspace Settings** - VS Code workspace settings
+3. **User Settings** (lowest priority) - Global VS Code user settings
+
+### .xmlformatterrc File
+
+Create a `.xmlformatterrc` file in your workspace root to override VS Code settings:
+
+```json
+{
+  "tabSize": 2,
+  "useTabs": false,
+  "alignAttributes": true,
+  "keepCDATA": true,
+  "emptyElementHandling": "selfClosing",
+  "maxLineLength": 120,
+  "sortAttributes": true,
+  "closeTagOnNewLine": false,
+  "preserveComments": true,
+  "odooTagSpacing": true,
+  "odooSpacingTags": ["record", "menuitem", "template"]
+}
+```
+
+**Available .xmlformatterrc Options:**
+- `tabSize` (number): Indentation size → maps to `indentSize`
+- `useTabs` (boolean): Use tabs instead of spaces → maps to `indentType`
+- `alignAttributes` (boolean): Format attributes on separate lines → maps to `formatAttributes`
+- `emptyElementHandling` ("selfClosing" | "expand"): Self-closing tag behavior → maps to `selfClosingTags`
+- `maxLineLength` (number): Maximum line length
+- `sortAttributes` (boolean): Sort attributes alphabetically
+- `closeTagOnNewLine` (boolean): Put closing tag on new line
+- `preserveComments` (boolean): Preserve XML comments
+- `odooTagSpacing` (boolean): Add blank lines between Odoo tags
+- `odooSpacingTags` (string[]): List of tags to add spacing for
+
+The `.xmlformatterrc` file is automatically watched for changes. When you modify it, the configuration will be reloaded immediately.
 
 ## Extension Settings
 

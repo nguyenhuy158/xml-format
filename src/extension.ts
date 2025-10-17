@@ -135,8 +135,25 @@ export function activate(context: vscode.ExtensionContext) {
     const configurationChangeListener = vscode.workspace.onDidChangeConfiguration(event => {
         // Check if xml-formater configuration was changed
         if (event.affectsConfiguration('xml-formater')) {
+            // Clear RC config cache when VS Code settings change
+            ConfigManager.clearRcCache();
             logAllSettings("Configuration changed by user");
         }
+    });
+
+    // Watch for .xmlformatterrc file changes
+    const rcFileWatcher = vscode.workspace.createFileSystemWatcher('**/.xmlformatterrc');
+    rcFileWatcher.onDidChange(() => {
+        ConfigManager.clearRcCache();
+        logAllSettings(".xmlformatterrc file changed");
+    });
+    rcFileWatcher.onDidCreate(() => {
+        ConfigManager.clearRcCache();
+        logAllSettings(".xmlformatterrc file created");
+    });
+    rcFileWatcher.onDidDelete(() => {
+        ConfigManager.clearRcCache();
+        logAllSettings(".xmlformatterrc file deleted");
     });
 
     // Register format on save listener
@@ -404,7 +421,16 @@ To change these settings:
         }
     );
 
-    context.subscriptions.push(formatCommand, testCommand, showConfigCommand, debugOutputCommand, testFormatOnSaveCommand, configurationChangeListener, formatOnSaveListener);
+    context.subscriptions.push(
+        formatCommand,
+        testCommand,
+        showConfigCommand,
+        debugOutputCommand,
+        testFormatOnSaveCommand,
+        configurationChangeListener,
+        formatOnSaveListener,
+        rcFileWatcher
+    );
 }
 
 // This method is called when your extension is deactivated

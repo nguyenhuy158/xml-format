@@ -1,0 +1,109 @@
+# .xmlformatterrc Configuration Example
+
+This file demonstrates all available configuration options for the xml-formater extension.
+
+## Priority
+
+Settings in `.xmlformatterrc` have the **highest priority** and will override:
+- Workspace settings (`settings.json` in `.vscode` folder)
+- User settings (global VS Code settings)
+
+## Configuration Options
+
+```json
+{
+  // Indentation size (maps to xml-formater.indentSize)
+  "tabSize": 2,
+
+  // Use tabs instead of spaces (maps to xml-formater.indentType)
+  // true = tabs, false = spaces
+  "useTabs": false,
+
+  // Format attributes on separate lines when line exceeds maxLineLength
+  // (maps to xml-formater.formatAttributes)
+  "alignAttributes": true,
+
+  // Keep CDATA sections intact (currently not implemented)
+  "keepCDATA": true,
+
+  // How to handle empty elements (maps to xml-formater.selfClosingTags)
+  // "selfClosing" = <tag/>, "expand" = <tag></tag>
+  "emptyElementHandling": "selfClosing",
+
+  // Maximum line length before wrapping (maps to xml-formater.maxLineLength)
+  "maxLineLength": 120,
+
+  // Sort attributes alphabetically (maps to xml-formater.sortAttributes)
+  "sortAttributes": true,
+
+  // Put closing tag on new line (maps to xml-formater.closeTagOnNewLine)
+  "closeTagOnNewLine": false,
+
+  // Preserve XML comments during formatting (maps to xml-formater.preserveComments)
+  "preserveComments": true,
+
+  // Add blank lines between important Odoo tags (maps to xml-formater.odooTagSpacing)
+  "odooTagSpacing": true,
+
+  // List of Odoo tags to add spacing for (maps to xml-formater.odooSpacingTags)
+  "odooSpacingTags": [
+    "odoo",
+    "data",
+    "record",
+    "form",
+    "tree",
+    "kanban",
+    "menuitem",
+    "template",
+    "function",
+    "delete"
+  ]
+}
+```
+
+## Example Configurations
+
+### Minimal Configuration
+```json
+{
+  "tabSize": 4,
+  "useTabs": false
+}
+```
+
+### Odoo-Optimized Configuration
+```json
+{
+  "tabSize": 2,
+  "useTabs": false,
+  "alignAttributes": true,
+  "sortAttributes": true,
+  "odooTagSpacing": true,
+  "odooSpacingTags": ["record", "menuitem", "template", "function"]
+}
+```
+
+### Compact Configuration
+```json
+{
+  "tabSize": 2,
+  "alignAttributes": false,
+  "odooTagSpacing": false,
+  "maxLineLength": 200
+}
+```
+
+## File Location
+
+Place `.xmlformatterrc` in your workspace root directory (same level as your `.vscode` folder).
+
+## Auto-Reload
+
+The extension automatically watches for changes to `.xmlformatterrc`. When you modify the file:
+1. Configuration cache is cleared
+2. New settings are loaded immediately
+3. Next formatting operation will use the updated settings
+
+## Validation
+
+Make sure your `.xmlformatterrc` file is valid JSON. Invalid JSON will be ignored and the extension will fall back to VS Code settings.

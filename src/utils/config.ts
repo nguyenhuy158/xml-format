@@ -1,16 +1,131 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
 import { XmlFormatterOptions } from '../formatters/xmlFormatter';
+
+interface XmlFormatterRcConfig {
+    tabSize?: number;
+    useTabs?: boolean;
+    alignAttributes?: boolean;
+    keepCDATA?: boolean;
+    emptyElementHandling?: 'selfClosing' | 'expand';
+    maxLineLength?: number;
+    sortAttributes?: boolean;
+    closeTagOnNewLine?: boolean;
+    preserveComments?: boolean;
+    odooTagSpacing?: boolean;
+    odooSpacingTags?: string[];
+}
 
 export class ConfigManager {
     private static readonly EXTENSION_ID = 'xml-formater';
+    private static readonly RC_FILE_NAME = '.xmlformatterrc';
+    private static rcConfigCache: Map<string, XmlFormatterRcConfig | null> = new Map();
 
     /**
-     * Get XML formatter options from VS Code configuration
+     * Find .xmlformatterrc file in workspace folders
+     */
+    private static findRcFile(): string | null {
+        const workspaceFolders = vscode.workspace.workspaceFolders;
+        if (!workspaceFolders || workspaceFolders.length === 0) {
+            return null;
+        }
+
+        // Check each workspace folder for .xmlformatterrc
+        for (const folder of workspaceFolders) {
+            const rcPath = path.join(folder.uri.fsPath, this.RC_FILE_NAME);
+            if (fs.existsSync(rcPath)) {
+                return rcPath;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Load configuration from .xmlformatterrc file
+     */
+    private static loadRcConfig(): XmlFormatterRcConfig | null {
+        const rcPath = this.findRcFile();
+        if (!rcPath) {
+            return null;
+        }
+
+        // Check cache
+        if (this.rcConfigCache.has(rcPath)) {
+            return this.rcConfigCache.get(rcPath) || null;
+        }
+
+        try {
+            const content = fs.readFileSync(rcPath, 'utf-8');
+            const config = JSON.parse(content) as XmlFormatterRcConfig;
+            this.rcConfigCache.set(rcPath, config);
+            return config;
+        } catch (error) {
+            console.error(`Failed to load ${this.RC_FILE_NAME}:`, error);
+            this.rcConfigCache.set(rcPath, null);
+            return null;
+        }
+    }
+
+    /**
+     * Clear RC config cache (useful when file changes)
+     */
+    public static clearRcCache(): void {
+        this.rcConfigCache.clear();
+    }
+
+    /**
+     * Map .xmlformatterrc config to XmlFormatterOptions
+     */
+    private static mapRcConfigToOptions(rcConfig: XmlFormatterRcConfig): Partial<XmlFormatterOptions> {
+        const options: Partial<XmlFormatterOptions> = {};
+
+        if (rcConfig.tabSize !== undefined) {
+            options.indentSize = rcConfig.tabSize;
+        }
+        if (rcConfig.useTabs !== undefined) {
+            options.indentType = rcConfig.useTabs ? 'tabs' : 'spaces';
+        }
+        if (rcConfig.alignAttributes !== undefined) {
+            options.formatAttributes = rcConfig.alignAttributes;
+        }
+        if (rcConfig.emptyElementHandling !== undefined) {
+            options.selfClosingTags = rcConfig.emptyElementHandling === 'selfClosing';
+        }
+        if (rcConfig.maxLineLength !== undefined) {
+            options.maxLineLength = rcConfig.maxLineLength;
+        }
+        if (rcConfig.sortAttributes !== undefined) {
+            options.sortAttributes = rcConfig.sortAttributes;
+        }
+        if (rcConfig.closeTagOnNewLine !== undefined) {
+            options.closeTagOnNewLine = rcConfig.closeTagOnNewLine;
+        }
+        if (rcConfig.preserveComments !== undefined) {
+            options.preserveComments = rcConfig.preserveComments;
+        }
+        if (rcConfig.odooTagSpacing !== undefined) {
+            options.odooTagSpacing = rcConfig.odooTagSpacing;
+        }
+        if (rcConfig.odooSpacingTags !== undefined) {
+            options.odooSpacingTags = rcConfig.odooSpacingTags;
+        }
+
+        return options;
+    }
+
+    /**
+     * Get XML formatter options with hierarchy:
+     * 1. .xmlformatterrc (highest priority)
+     * 2. Workspace settings
+     * 3. User settings (lowest priority)
      */
     public static getFormatterOptions(): XmlFormatterOptions {
+        // Load from VS Code settings (User + Workspace merged)
         const config = vscode.workspace.getConfiguration(this.EXTENSION_ID);
 
-        return {
+        const baseOptions: XmlFormatterOptions = {
             indentSize: config.get<number>('indentSize', 2),
             indentType: config.get<'spaces' | 'tabs'>('indentType', 'spaces'),
             maxLineLength: config.get<number>('maxLineLength', 120),
@@ -23,6 +138,15 @@ export class ConfigManager {
             odooTagSpacing: config.get<boolean>('odooTagSpacing', true),
             odooSpacingTags: config.get<string[]>('odooSpacingTags', ['odoo', 'data', 'record', 'form', 'tree', 'kanban', 'search', 'calendar', 'pivot', 'graph', 'group', 'notebook', 'page', 'button', 'header', 'sheet', 'xpath', 'menuitem', 'act_window', 'report', 'template', 't', 'function', 'delete'])
         };
+
+        // Override with .xmlformatterrc if exists (highest priority)
+        const rcConfig = this.loadRcConfig();
+        if (rcConfig) {
+            const rcOptions = this.mapRcConfigToOptions(rcConfig);
+            return { ...baseOptions, ...rcOptions };
+        }
+
+        return baseOptions;
     }
 
     /**
