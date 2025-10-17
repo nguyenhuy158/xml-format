@@ -263,12 +263,25 @@ export class XmlFormatter {
     private formatAttributesBasedOnLineLength(xml: string): string {
         const lines = xml.split('\n');
         const result: string[] = [];
+        let insideComment = false;
 
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
+            const trimmed = line.trim();
+
+            // Track if we're entering or exiting a comment
+            if (trimmed.startsWith('<!--')) {
+                insideComment = true;
+            }
+            if (trimmed.endsWith('-->')) {
+                insideComment = false;
+                result.push(line);
+                continue;
+            }
 
             // Skip empty lines, comments, and text content
-            if (!line.trim() || line.trim().startsWith('<!--') || !line.includes('<')) {
+            // CRITICAL: Skip ALL lines inside comments to preserve comment content
+            if (!trimmed || insideComment || !line.includes('<')) {
                 result.push(line);
                 continue;
             }

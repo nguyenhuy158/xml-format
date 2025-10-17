@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <-xquery This is a user comment -->
+    <data>
+        <-xquery Another comment with special chars: <>&"' -->
+        <record id="test" model="ir.model">
+            <field name="name">Test</field>
+            <-xquery Inline comment -->
+        </record>
+
+        <-xquery Multi-line comment
+             with multiple lines
+             should be preserved -->
+    </data>
+</odoo>
