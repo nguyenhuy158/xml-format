@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import { XmlFormatterOptions } from '../formatters/xmlFormatter';
+import { XmlFormatterOptions } from '../formatters/types';
 
 interface XmlFormatterRcConfig {
     tabSize?: number;

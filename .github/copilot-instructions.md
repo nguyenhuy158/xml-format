@@ -174,3 +174,18 @@ context.subscriptions.push(newCommand);
 - **vsce**: VS Code Extension packaging tool (in dependencies, not devDependencies)
 - **@types/vscode**: VS Code API type definitions
 - **TypeScript toolchain**: Compiler and ESLint integration
+
+## Modular Structure for XML Formatter
+
+The `XmlFormatter` class has been refactored into smaller modules for better maintainability. The new structure is as follows:
+
+- **`src/formatters/types.ts`**: Contains the `XmlFormatterOptions` interface.
+- **`src/formatters/processors/`**: Contains processors for specific tasks:
+  - `blankLineProcessor.ts`: Handles blank line preservation and restoration.
+  - `commentProcessor.ts`: Handles comment removal.
+- **`src/formatters/xmlFormatter.ts`**: Main class that integrates all processors.
+
+### Benefits of Modularization
+- Easier to maintain and test individual components.
+- Clear separation of concerns for each functionality.
+- Improved readability and scalability of the codebase.
