@@ -126,8 +126,9 @@
     },
     "scripts": {
         "vscode:prepublish": "npm run build:prod",
-        "compile": "tsc -p ./",
+        "compile": "tsc -p ./ && npm run copy:fixtures",
         "watch": "tsc -watch -p ./",
+        "copy:fixtures": "mkdir -p out/test/fixtures && cp -r src/test/fixtures/* out/test/fixtures/",
         "build:prod": "node build.js",
         "build:watch": "node build.js --watch",
         "pretest": "npm run compile && npm run lint",
