@@ -272,16 +272,17 @@ export class XmlFormatter {
                     tag.includes('xpath')
                 );
 
-                if (shouldMultiline) {
+                // Only convert to multiline if the tag should be multiline AND line exceeds maxLineLength
+                if (shouldMultiline && line.length > this.options.maxLineLength) {
                     const multilineTag = this.convertToMultilineTag(tag, indent);
                     result.push(multilineTag);
                     continue;
                 }
             }
 
-            // For button tags with many attributes, ensure proper indentation
+            // For button tags with many attributes, ensure proper indentation only if line is too long
             const buttonMatch = line.match(/^(\s*)(<button[^>]*\/>)/);
-            if (buttonMatch) {
+            if (buttonMatch && line.length > this.options.maxLineLength) {
                 const indent = buttonMatch[1];
                 const tag = buttonMatch[2];
                 const multilineButton = this.convertToMultilineTag(tag, indent);
@@ -475,6 +476,16 @@ export class XmlFormatter {
 
                 // Check if current line exceeds maxLineLength
                 if (line.length > this.options.maxLineLength) {
+                    // Check if there's content after the tag first
+                    const tagEndIndex = line.indexOf(tag) + tag.length;
+                    const contentAfterTag = line.substring(tagEndIndex);
+
+                    // Don't break tags that have content on the same line
+                    if (contentAfterTag.trim() && !contentAfterTag.trim().startsWith('<')) {
+                        result.push(line);
+                        continue;
+                    }
+
                     // Parse tag to extract tag name and attributes
                     const tagParts = tag.match(/^<([^\s>\/]+)(.+?)(\s*\/?)>$/);
                     if (tagParts) {
@@ -486,9 +497,6 @@ export class XmlFormatter {
                         const attributes = this.parseAttributes(attributesStr);
 
                         if (attributes.length > 0) {
-                            // Check if there's content after the tag
-                            const tagEndIndex = line.indexOf(tag) + tag.length;
-                            const contentAfterTag = line.substring(tagEndIndex);
 
                             // Format with attributes on separate lines
                             const formattedTag = this.formatTagWithSeparateAttributes(
