@@ -43,6 +43,12 @@ npm run lint       # Check code style
 - Test file name: `{feature}.test.ts`
 - Fixture files: `src/test/fixtures/{category}/{testName}-input.xml` and `-expected.xml`
 
+### CRITICAL: Test Fixture Integrity
+- **NEVER modify fixture input/expected files when debugging failing tests**
+- **ONLY fix the application code (formatters, processors) to match expected output**
+- If fixture appears wrong, provide suggestions to user - do not change it yourself
+- User must manually review and approve any fixture changes
+
 ### Test Folders
 - `src/test/core/` - Main extension tests
 - `src/test/attributes/` - Attribute tests

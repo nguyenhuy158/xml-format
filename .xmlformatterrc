@@ -8,7 +8,7 @@
     "emptyElementHandling": "selfClosing",
     "selfClosingTags": true,
     "maxLineLength": 80,
-    "closeTagOnNewLine": false,
+    "closeTagOnNewLine": true,
     "preserveComments": true,
     "maximumBlankLines": 1,
     "odooTagSpacing": true,
