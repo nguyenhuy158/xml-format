@@ -1,140 +1,69 @@
 # Copilot Instructions for xml-formater
 
 ## Communication Style
-- Keep responses SHORT and DIRECT - no lengthy summaries or explanations unless asked
-- Just do the work, then report what was done in 1-2 sentences
-- No emoji overload, no "Perfect! 🎉", no "Let's do this!"
-- Skip phrases like "Tôi hiểu vấn đề rồi!", "Tuyệt vời!", "Hoàn thành!"
-- Don't create summary files (FIX-SUMMARY.md, etc.) unless explicitly requested
-- Don't repeat information the user already knows
+- Keep answers short and clear
+- Do the work first, then tell what you did in 1-2 sentences
+- No extra words or emoji
 - Answer in Vietnamese when user asks in Vietnamese, English when user asks in English
+- All code and generated content must use simple English (A2 level)
 
 ## File Editing Rules
-- **ONLY use MCP Server File Manager tools** for editing files: `read_file`, `create_file`, `replace_string_in_file`
-- **NEVER use terminal commands** to modify file contents: no `node -e`, `node -p`, `sed`, `awk`, `echo >`, `cat >`, or similar
-- **NEVER use `node -e` or `node -p`** to write files or generate content - use file tools instead
-- Terminal is ONLY for: building, testing, running scripts, git operations, npm commands
-- **WRONG**: `node -e "fs.writeFileSync(...)"`, `node -p "..."  > file.txt`, `sed -i 's/.../.../g'`, `echo "content" > file.txt`
-- **RIGHT**: Use `create_file` or `replace_string_in_file` tools to modify files
+- **ONLY use file tools** to edit files: `read_file`, `create_file`, `replace_string_in_file`
+- **NEVER use terminal commands** to change files: no `node -e`, `sed`, `echo >`, etc.
+- Use terminal ONLY for: build, test, run scripts, git, npm commands
 
 ## Project Overview
-This is a VS Code extension project for formatting XML files, specifically designed for Odoo development workflows. The extension is built using TypeScript and follows standard VS Code Extension API patterns.
+This is a VS Code extension for formatting XML files. It uses TypeScript and VS Code Extension API.
 
-## Architecture & Key Components
+## Key Files
+- **`src/extension.ts`**: Main file with `activate()` and `deactivate()` functions
+- **`package.json`**: Extension settings, commands, and build scripts
+- **`src/formatters/xmlFormatter.ts`**: XML formatting logic
+- **`src/test/`**: All test files
 
-### Extension Entry Point
-- **`src/extension.ts`**: Main extension file with `activate()` and `deactivate()` lifecycle methods
-- Commands are registered in `activate()` using `vscode.commands.registerCommand()`
-- Command IDs must match those defined in `package.json` contributes.commands section
+## Commands
+Current commands in this extension:
+- `xml-formater.formatDocument`: Format XML document
+- `xml-formater.testFormatter`: Test formatter
 
-### Package Configuration
-- **`package.json`**: Defines extension metadata, commands, activation events, and build scripts
-- Key sections: `contributes.commands`, `activationEvents`, `main` (points to compiled JS)
-- Current commands:
-  - `xml-formater.formatDocument`: Main XML formatting command
-  - `xml-formater.testFormatter`: Test XML formatter functionality### Build System
-- TypeScript compilation: `src/` → `out/` directory
-- Build commands: `npm run compile` (one-time), `npm run watch` (continuous)
-- The watch task is configured as the default build task in `.vscode/tasks.json`
+Command naming pattern: `xml-formater.{actionName}`
 
-## Development Workflows
-
-### Command Naming Convention
-Commands should follow these patterns:
-- **Command ID**: `{extensionName}.{actionName}` (using dot separator)
-- **Command Title**: `xml-formater: {Action Description}` (using colon prefix)
-- **Extension Name**: `xml-formater` (matches package.json name)
-- **Action Names**: Use camelCase for command IDs
-  - Examples: `formatDocument`, `testFormatter`, `formatSelection`
-- **Current Commands**:
-  - Command: `xml-formater.formatDocument`, Title: `xml-formater: Format Document`
-  - Command: `xml-formater.testFormatter`, Title: `xml-formater: Test Formatter`
-- **Command Registration**: Must be registered in both:
-  - `package.json` contributes.commands section (for UI/command palette)
-  - `src/extension.ts` using `vscode.commands.registerCommand()`
-
-### Building & Testing
+## Build & Test
 ```bash
-npm run watch          # Start continuous build (recommended during development)
-npm run compile        # One-time build
-npm run test          # Run tests (requires prior compilation)
-npm run lint          # ESLint validation
+npm run watch      # Auto build when files change
+npm run compile    # Build once
+npm run test       # Run all tests
+npm run lint       # Check code style
 ```
 
-### Extension Development
-- Use F5 or "Run Extension" launch configuration to test in new VS Code window
-- Pre-launch task automatically compiles TypeScript
-- Extension Development Host loads from `--extensionDevelopmentPath`
+## Test Rules
+- **ALL tests go in `src/test/` folder** - never in root
+- **Use TypeScript only** - no .js files
+- **Use fixture files** - no XML strings in test code
+- Test file name: `{feature}.test.ts`
+- Fixture files: `src/test/fixtures/{category}/{testName}-input.xml` and `-expected.xml`
 
-### Packaging & Publishing
-```bash
-npm run package       # Create .vsix file using vsce
-npm run publish       # Publish to marketplace (requires vsce auth)
-```
+### Test Folders
+- `src/test/core/` - Main extension tests
+- `src/test/attributes/` - Attribute tests
+- `src/test/comments/` - Comment tests
+- `src/test/formatting/` - Format tests
+- `src/test/config/` - Config tests
+- `src/test/validation/` - Validation tests
+- `src/test/odoo/` - Odoo-specific tests
+- `src/test/other/` - Other tests
 
-## Project-Specific Patterns
-
-### Code Style
-- ESLint config in `eslint.config.mjs` enforces TypeScript naming conventions
-- Strict TypeScript settings enabled in `tsconfig.json`
-- Target: ES2022, Module: Node16 for VS Code compatibility
-
-### Testing Structure
-- **ALL tests MUST be in `src/test/` directory** - no test files (.js, .xml) in project root
-- **ABSOLUTELY NO .js test files** - only TypeScript (.ts) files allowed
-- **NEVER create test files in root directory** - all tests go in `src/test/` only
-- Tests use Mocha framework with VS Code Test Runner (`.vscode-test.mjs`)
-- Test files follow pattern: `{feature}.test.ts` (e.g., `apostrophe.test.ts`, `commentPreservation.test.ts`)
-- **MANDATORY: Test XML content MUST be stored in fixture files** - NO raw XML strings in test files
-- **Fixture Structure**: Input and expected XML must be in `src/test/fixtures/{category}/{testName}-input.xml` and `src/test/fixtures/{category}/{testName}-expected.xml`
-- Run tests via VS Code Test Runner (automatically compiles and runs)
-- **Test Organization by Feature**: Tests are organized into feature-specific folders:
-  - `src/test/core/` - Core extension and formatter tests
-  - `src/test/attributes/` - Attribute handling and sorting tests
-  - `src/test/comments/` - Comment preservation and handling tests
-  - `src/test/formatting/` - General formatting features (tags, spacing, etc.)
-  - `src/test/config/` - Configuration and settings tests
-  - `src/test/validation/` - Validation feature tests
-  - `src/test/odoo/` - Odoo-specific formatting tests
-  - `src/test/other/` - Other tests that don't fit existing groups
-- **Test Tracker**: See `TEST-TRACKER.md` for complete list of all tests grouped by feature
-- **MANDATORY when creating new tests**:
-  1. **Create Fixture Files**: MUST create input and expected XML files in appropriate fixtures folder
-     - Input file: `src/test/fixtures/{category}/{testName}-input.xml`
-     - Expected file: `src/test/fixtures/{category}/{testName}-expected.xml`
-  2. **Group Assignment**: MUST place test in appropriate feature group folder
-     - If feature matches existing group → use that group
-     - If new feature type → create new group folder and update TEST-TRACKER.md
-     - If unclear → use `src/test/other/` folder
-  3. **Update TEST-TRACKER.md**: MUST add new test entry to TEST-TRACKER.md immediately after creating test
-     - Add to correct feature group table
-     - Update test count in overview table
-     - If creating new group, add new section with table
-  4. **Test Verification**: All tests MUST pass before publishing
-     - Run `npm test` to verify all tests pass
-     - Publishing commands (`pub:patch`, `pub:minor`, `pub:major`) require passing tests
-- **WRONG**:
-  - Creating `test-*.js` files ANYWHERE (especially in root)
-  - Creating `test-*.xml` files in root directory
-  - Using JavaScript for tests
-  - Placing tests directly in `src/test/` root without proper folder organization
-  - Creating new test WITHOUT updating TEST-TRACKER.md
-  - Publishing without running and passing all tests
-  - **Embedding raw XML strings directly in test files**
-- **RIGHT**:
-  - Creating `src/test/{feature-group}/{feature}.test.ts` using fixture files
-  - Using TypeScript only for all test files
-  - Organizing tests by feature group for better maintainability
-  - ALWAYS updating TEST-TRACKER.md when adding new tests
-  - Running `npm test` before any publish command
-  - **Using `loadFixture()` to load input/expected from fixture files**
+### When Adding New Tests
+1. Create fixture files in `src/test/fixtures/{category}/`
+2. Create test file in correct folder (e.g., `src/test/formatting/`)
+3. Update `TEST-TRACKER.md`
+4. Run `npm test` to check all tests pass
 
 ### Test File Template
 ```typescript
-// For tests in feature-specific folders (e.g., src/test/formatting/)
 import * as assert from 'assert';
-import { formatXml } from '../../../formatters/xmlFormatter'; // Adjust path based on folder depth
-import { loadFixture } from '../../utils/fixtureLoader'; // Adjust path based on folder depth
+import { formatXml } from '../../../formatters/xmlFormatter';
+import { loadFixture } from '../../utils/fixtureLoader';
 
 suite('Feature Name Test Suite', () => {
     test('Test case description', () => {
@@ -145,61 +74,36 @@ suite('Feature Name Test Suite', () => {
 });
 ```
 
-**Note**: Import paths must be adjusted based on test location:
-- Tests in `src/test/core/` use `../../formatters/xmlFormatter` and `../utils/fixtureLoader`
-- Tests in `src/test/{feature}/` use `../../../formatters/xmlFormatter` and `../../utils/fixtureLoader`
-
-### Missing Implementation
-The extension has basic XML formatting implemented. For additional features:
-1. Add more XML formatting options (indentation, attribute formatting, etc.)
-2. Add new commands following the naming pattern: `xml-formater.{actionName}`
-3. Add configuration options in `package.json` contributes.configuration
-4. Consider adding keybindings for common formatting actions
-
-## Command Implementation Pattern
-
-### Adding New Commands
-1. **Define in package.json**:
+## Adding New Commands
+1. Add command in `package.json`:
 ```json
 {
   "command": "xml-formater.newCommand",
-  "title": "xml-formater: New Command Title"
+  "title": "xml-formater: New Command"
 }
 ```
 
-2. **Register in extension.ts**:
+2. Register in `src/extension.ts`:
 ```typescript
-const newCommand = vscode.commands.registerCommand(
+const cmd = vscode.commands.registerCommand(
     "xml-formater.newCommand",
     async () => {
-        // Command implementation
+        // Your code here
     }
 );
-context.subscriptions.push(newCommand);
+context.subscriptions.push(cmd);
 ```
 
-3. **Follow naming convention**: `xml-formater.{camelCaseActionName}`## Key Files for Changes
-- **`src/extension.ts`**: Add XML formatting commands and logic
-- **`package.json`**: Update commands, add configuration settings
-- **`src/test/extension.test.ts`**: Add XML formatting test cases
-- **`README.md`**: Update with actual features and usage instructions
+## Code Structure
+- **`src/formatters/types.ts`**: Type definitions
+- **`src/formatters/xmlFormatter.ts`**: Main formatter
+- **`src/formatters/processors/`**: Helper processors
+  - `blankLineProcessor.ts`: Handle blank lines
+  - `commentProcessor.ts`: Handle comments
+- **`src/utils/config.ts`**: Config loader
 
-## External Dependencies
-- **vsce**: VS Code Extension packaging tool (in dependencies, not devDependencies)
-- **@types/vscode**: VS Code API type definitions
-- **TypeScript toolchain**: Compiler and ESLint integration
-
-## Modular Structure for XML Formatter
-
-The `XmlFormatter` class has been refactored into smaller modules for better maintainability. The new structure is as follows:
-
-- **`src/formatters/types.ts`**: Contains the `XmlFormatterOptions` interface.
-- **`src/formatters/processors/`**: Contains processors for specific tasks:
-  - `blankLineProcessor.ts`: Handles blank line preservation and restoration.
-  - `commentProcessor.ts`: Handles comment removal.
-- **`src/formatters/xmlFormatter.ts`**: Main class that integrates all processors.
-
-### Benefits of Modularization
-- Easier to maintain and test individual components.
-- Clear separation of concerns for each functionality.
-- Improved readability and scalability of the codebase.
+## Important Rules
+- All project docs must be in English
+- Use simple English (A2 level)
+- Run tests before publishing
+- **MUST update `.xmlformatterrc` when adding new config options** - this file must always have all current config options
