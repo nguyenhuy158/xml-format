@@ -85,7 +85,8 @@ npm run publish       # Publish to marketplace (requires vsce auth)
 - **NEVER create test files in root directory** - all tests go in `src/test/` only
 - Tests use Mocha framework with VS Code Test Runner (`.vscode-test.mjs`)
 - Test files follow pattern: `{feature}.test.ts` (e.g., `apostrophe.test.ts`, `commentPreservation.test.ts`)
-- Test XML samples should be embedded as strings in test files, NOT separate .xml files
+- **MANDATORY: Test XML content MUST be stored in fixture files** - NO raw XML strings in test files
+- **Fixture Structure**: Input and expected XML must be in `src/test/fixtures/{category}/{testName}-input.xml` and `src/test/fixtures/{category}/{testName}-expected.xml`
 - Run tests via VS Code Test Runner (automatically compiles and runs)
 - **Test Organization by Feature**: Tests are organized into feature-specific folders:
   - `src/test/core/` - Core extension and formatter tests
@@ -98,15 +99,18 @@ npm run publish       # Publish to marketplace (requires vsce auth)
   - `src/test/other/` - Other tests that don't fit existing groups
 - **Test Tracker**: See `TEST-TRACKER.md` for complete list of all tests grouped by feature
 - **MANDATORY when creating new tests**:
-  1. **Group Assignment**: MUST place test in appropriate feature group folder
+  1. **Create Fixture Files**: MUST create input and expected XML files in appropriate fixtures folder
+     - Input file: `src/test/fixtures/{category}/{testName}-input.xml`
+     - Expected file: `src/test/fixtures/{category}/{testName}-expected.xml`
+  2. **Group Assignment**: MUST place test in appropriate feature group folder
      - If feature matches existing group → use that group
      - If new feature type → create new group folder and update TEST-TRACKER.md
      - If unclear → use `src/test/other/` folder
-  2. **Update TEST-TRACKER.md**: MUST add new test entry to TEST-TRACKER.md immediately after creating test
+  3. **Update TEST-TRACKER.md**: MUST add new test entry to TEST-TRACKER.md immediately after creating test
      - Add to correct feature group table
      - Update test count in overview table
      - If creating new group, add new section with table
-  3. **Test Verification**: All tests MUST pass before publishing
+  4. **Test Verification**: All tests MUST pass before publishing
      - Run `npm test` to verify all tests pass
      - Publishing commands (`pub:patch`, `pub:minor`, `pub:major`) require passing tests
 - **WRONG**:
@@ -116,32 +120,34 @@ npm run publish       # Publish to marketplace (requires vsce auth)
   - Placing tests directly in `src/test/` root without proper folder organization
   - Creating new test WITHOUT updating TEST-TRACKER.md
   - Publishing without running and passing all tests
+  - **Embedding raw XML strings directly in test files**
 - **RIGHT**:
-  - Creating `src/test/{feature-group}/{feature}.test.ts` with embedded XML strings
+  - Creating `src/test/{feature-group}/{feature}.test.ts` using fixture files
   - Using TypeScript only for all test files
   - Organizing tests by feature group for better maintainability
   - ALWAYS updating TEST-TRACKER.md when adding new tests
   - Running `npm test` before any publish command
+  - **Using `loadFixture()` to load input/expected from fixture files**
 
 ### Test File Template
 ```typescript
 // For tests in feature-specific folders (e.g., src/test/formatting/)
 import * as assert from 'assert';
 import { formatXml } from '../../../formatters/xmlFormatter'; // Adjust path based on folder depth
+import { loadFixture } from '../../utils/fixtureLoader'; // Adjust path based on folder depth
 
 suite('Feature Name Test Suite', () => {
     test('Test case description', () => {
-        const input = `<xml>test content</xml>`;
-        const expected = `<xml>\n    test content\n</xml>`;
-        const result = formatXml(input);
-        assert.strictEqual(result, expected);
+        const fixture = loadFixture('category', 'testName');
+        const result = formatXml(fixture.input);
+        assert.strictEqual(result, fixture.expected);
     });
 });
 ```
 
 **Note**: Import paths must be adjusted based on test location:
-- Tests in `src/test/core/` use `../../formatters/xmlFormatter`
-- Tests in `src/test/{feature}/` use `../../../formatters/xmlFormatter`
+- Tests in `src/test/core/` use `../../formatters/xmlFormatter` and `../utils/fixtureLoader`
+- Tests in `src/test/{feature}/` use `../../../formatters/xmlFormatter` and `../../utils/fixtureLoader`
 
 ### Missing Implementation
 The extension has basic XML formatting implemented. For additional features:

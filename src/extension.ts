@@ -5,7 +5,6 @@ import { testXmlFormatter } from "./test/core/xmlFormatterTest";
 import { testConfiguration, testConfigurationChangeLogging } from "./test/config/configTest";
 import { testFormatOnSave, demonstrateFormatOnSaveSettings } from "./test/config/formatOnSaveTest";
 import { testAttributeFormatting } from "./test/attributes/attributeTest";
-import { testAttributeSorting } from "./test/attributes/attributeSortingTest";
 import { XmlFormatter } from "./formatters/xmlFormatter";
 import { ConfigManager } from "./utils/config";
 
@@ -378,10 +377,9 @@ export function activate(context: vscode.ExtensionContext) {
             const changeLoggingResult = await testConfigurationChangeLogging();
             const formatOnSaveResult = testFormatOnSave();
             const attributeTestResult = testAttributeFormatting();
-            const attributeSortingResult = testAttributeSorting();
             demonstrateFormatOnSaveSettings();
 
-            if (xmlTestResult && configTestResult && changeLoggingResult && formatOnSaveResult && attributeTestResult && attributeSortingResult) {
+            if (xmlTestResult && configTestResult && changeLoggingResult && formatOnSaveResult && attributeTestResult) {
                 vscode.window.showInformationMessage(
                     "All tests completed successfully! Check console and Output panel for details."
                 );
