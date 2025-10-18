@@ -1,20 +1,16 @@
 import * as assert from 'assert';
 import { XmlFormatter } from '../../formatters/xmlFormatter';
 import { getTestConfig } from '../testConfig';
+import { loadFixture } from '../utils/fixtureLoader';
 
 suite('Close Tag Both Options Test Suite', () => {
-    const testXml = `<?xml version="1.0"?>
-<odoo>
-    <field name="name" placeholder="Enter name here with a very long text that makes the line exceed maximum length" required="True"/>
-    <button name="action_submit" string="Submit" type="object" class="btn-primary" icon="fa-check" attrs="{'invisible': [('state', '=', 'done')]}"/>
-</odoo>`;
-
     test('closeTagOnNewLine = false should keep closing tag on same line', () => {
         const formatter = new XmlFormatter(getTestConfig({
             closeTagOnNewLine: false
         }));
+        const fixture = loadFixture('formatting', 'closeTagBoth');
 
-        const result = formatter.formatXml(testXml);
+        const result = formatter.formatXml(fixture.input);
 
         // Should have field and button tags
         assert.ok(result.includes('<field'), 'Should contain field tag');
@@ -29,14 +25,15 @@ suite('Close Tag Both Options Test Suite', () => {
     });
 
     test('closeTagOnNewLine = true should put closing tag on new line when needed', () => {
-        const formatter = new XmlFormatter({
+        const formatter = new XmlFormatter(getTestConfig({
             indentSize: 4,
             formatAttributes: true,
             maxLineLength: 80,
             closeTagOnNewLine: true
-        });
+        }));
+        const fixture = loadFixture('formatting', 'closeTagBoth');
 
-        const result = formatter.formatXml(testXml);
+        const result = formatter.formatXml(fixture.input);
 
         // Should have proper formatting
         assert.ok(result.includes('<field'), 'Should contain field tag');
@@ -55,9 +52,10 @@ suite('Close Tag Both Options Test Suite', () => {
         const formatter2 = new XmlFormatter(getTestConfig({
             closeTagOnNewLine: true
         }));
+        const fixture = loadFixture('formatting', 'closeTagBoth');
 
-        const result1 = formatter1.formatXml(testXml);
-        const result2 = formatter2.formatXml(testXml);
+        const result1 = formatter1.formatXml(fixture.input);
+        const result2 = formatter2.formatXml(fixture.input);
 
         // Both should have the same content, just different formatting
         const essentialAttrs = ['name=', 'placeholder=', 'required=', 'string=', 'type=', 'attrs='];
@@ -72,8 +70,9 @@ suite('Close Tag Both Options Test Suite', () => {
         const formatter = new XmlFormatter(getTestConfig({
             closeTagOnNewLine: true
         }));
+        const fixture = loadFixture('formatting', 'closeTagBoth');
 
-        const result = formatter.formatXml(testXml);
+        const result = formatter.formatXml(fixture.input);
 
         // Complex attrs value should be preserved
         assert.ok(result.includes("{'invisible':"), 'Should preserve attrs with JSON-like value');

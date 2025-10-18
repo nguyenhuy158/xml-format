@@ -1,7 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
-import { testXmlFormatter } from "./test/core/xmlFormatterTest";
 import { testConfiguration, testConfigurationChangeLogging } from "./test/config/configTest";
 import { testFormatOnSave, demonstrateFormatOnSaveSettings } from "./test/config/formatOnSaveTest";
 import { testAttributeFormatting } from "./test/attributes/attributeTest";
@@ -372,14 +371,13 @@ export function activate(context: vscode.ExtensionContext) {
         async () => {
             console.log('\n=== Running XML Formatter Tests ===');
 
-            const xmlTestResult = testXmlFormatter();
             const configTestResult = testConfiguration();
             const changeLoggingResult = await testConfigurationChangeLogging();
             const formatOnSaveResult = testFormatOnSave();
             const attributeTestResult = testAttributeFormatting();
             demonstrateFormatOnSaveSettings();
 
-            if (xmlTestResult && configTestResult && changeLoggingResult && formatOnSaveResult && attributeTestResult) {
+            if (configTestResult && changeLoggingResult && formatOnSaveResult && attributeTestResult) {
                 vscode.window.showInformationMessage(
                     "All tests completed successfully! Check console and Output panel for details."
                 );

@@ -26,12 +26,32 @@ export function preserveBlankLinesAsComments(xml: string): string {
 }
 
 export function restoreBlankLinesFromComments(xml: string, maximumBlankLines: number): string {
-    let result = xml.split('\n')
+    // First, we need to handle blank lines carefully to preserve comment content
+    // Extract comments temporarily to avoid processing blank lines inside them
+    const commentMap = new Map<string, string>();
+    let commentIndex = 0;
+    
+    // Extract comments with their content preserved exactly as-is
+    let result = xml.replace(/<!--([\s\S]*?)-->/g, (match, content) => {
+        const placeholder = `__TEMP_COMMENT_${commentIndex}__`;
+        commentMap.set(placeholder, match);
+        commentIndex++;
+        return placeholder;
+    });
+
+    // Now process blank lines on content without comments
+    result = result.split('\n')
         .filter(line => line.trim() !== '')
         .join('\n');
 
+    // Restore comments with original content
+    commentMap.forEach((originalComment, placeholder) => {
+        result = result.replace(placeholder, originalComment);
+    });
+
+    const lines = result.split('\n');
+
     if (maximumBlankLines === 0) {
-        const lines = result.split('\n');
         const finalResult: string[] = [];
 
         for (const line of lines) {
@@ -44,7 +64,6 @@ export function restoreBlankLinesFromComments(xml: string, maximumBlankLines: nu
         return finalResult.join('\n');
     }
 
-    const lines = result.split('\n');
     const finalResult: string[] = [];
 
     for (const line of lines) {

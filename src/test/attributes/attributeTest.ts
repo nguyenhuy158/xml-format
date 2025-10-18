@@ -1,4 +1,5 @@
 import { XmlFormatter } from '../../formatters/xmlFormatter';
+import { getTestConfig } from '../testConfig';
 
 // Simple test for attribute formatting
 export function testAttributeFormatting() {
@@ -10,12 +11,10 @@ export function testAttributeFormatting() {
     const shortLineXml = '<record id="short" model="test">content</record>';
 
     // Test with formatAttributes enabled and short maxLineLength
-    const formatter = new XmlFormatter({
+    const formatter = new XmlFormatter(getTestConfig({
         formatAttributes: true,
-        maxLineLength: 80,
-        indentSize: 2,
-        indentType: 'spaces'
-    });
+        maxLineLength: 80
+    }));
 
     try {
         console.log('Original long line length:', longLineXml.length);

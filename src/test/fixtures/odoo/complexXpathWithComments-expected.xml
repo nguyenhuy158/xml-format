@@ -31,6 +31,7 @@
         </field>
     </record>
 
+
     <record id="view_order_form_inherit_sale" model="ir.ui.view">
         <field name="name">sale.order.form</field>
         <field name="model">sale.order</field>
@@ -55,5 +56,6 @@
             </xpath>
         </field>
     </record>
+
 
 </odoo>

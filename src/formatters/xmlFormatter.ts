@@ -385,11 +385,6 @@ export class XmlFormatter {
         // Trim trailing whitespace from each line
         result = result.split('\n').map(line => line.trimEnd()).join('\n');
 
-        // Ensure file ends with newline
-        if (!result.endsWith('\n')) {
-            result += '\n';
-        }
-
         return result;
     }
 
