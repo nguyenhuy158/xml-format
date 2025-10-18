@@ -42,10 +42,7 @@ suite('XML Formatter Test Suite', () => {
     });
 
     test('Long line attribute formatting should break attributes', () => {
-        const formatterWithAttributes = new XmlFormatter(getTestConfig({
-            formatAttributes: true,
-            maxLineLength: 80
-        }));
+        const formatterWithAttributes = new XmlFormatter(getTestConfig());
         const fixture = loadFixture('core', 'xmlFormatter-longLine');
         const result = formatterWithAttributes.formatXml(fixture.input);
 

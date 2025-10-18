@@ -10,9 +10,9 @@ export class XmlFormatter {
 
     constructor(options: Partial<XmlFormatterOptions> = {}) {
         this.options = {
-            indentSize: 2,
+            indentSize: options.tabSize || 4,  // Use tabSize if provided, fallback to 4
             indentType: 'spaces',
-            maxLineLength: 120,
+            maxLineLength: 80,
             preserveAttributes: true,
             formatAttributes: false,
             sortAttributes: false,
@@ -302,7 +302,9 @@ export class XmlFormatter {
     private convertToMultilineTag(tag: string, baseIndent: string): string {
         // Parse tag name and attributes
         const tagNameMatch = tag.match(/^<(\w+)/);
-        if (!tagNameMatch) return baseIndent + tag;
+        if (!tagNameMatch) {
+            return baseIndent + tag;
+        }
 
         const tagName = tagNameMatch[1];
         const isSelfClosing = tag.endsWith('/>');
@@ -479,12 +481,6 @@ export class XmlFormatter {
                     // Check if there's content after the tag first
                     const tagEndIndex = line.indexOf(tag) + tag.length;
                     const contentAfterTag = line.substring(tagEndIndex);
-
-                    // Don't break tags that have content on the same line
-                    if (contentAfterTag.trim() && !contentAfterTag.trim().startsWith('<')) {
-                        result.push(line);
-                        continue;
-                    }
 
                     // Parse tag to extract tag name and attributes
                     const tagParts = tag.match(/^<([^\s>\/]+)(.+?)(\s*\/?)>$/);

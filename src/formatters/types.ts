@@ -1,6 +1,7 @@
 export interface XmlFormatterOptions {
     indentSize: number;
     indentType: 'spaces' | 'tabs';
+    tabSize?: number;  // Added for backwards compatibility
     maxLineLength: number;
     preserveAttributes: boolean;
     formatAttributes: boolean;

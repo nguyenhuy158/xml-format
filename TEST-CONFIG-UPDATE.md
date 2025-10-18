@@ -24,7 +24,7 @@ export const DEFAULT_TEST_CONFIG: Partial<XmlFormatterOptions> = {
 ### File: `.xmlformatterrc`
 ```json
 {
-    "tabSize": 2,
+    "tabSize": 4,
     "useTabs": false,
     "alignAttributes": true,
     "sortAttributes": true,
