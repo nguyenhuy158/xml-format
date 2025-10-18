@@ -132,7 +132,7 @@
         "build:watch": "node build.js --watch",
         "pretest": "npm run compile && npm run lint",
         "lint": "eslint src",
-        "test": "vscode-test",
+        "test": "vscode-test --coverage --parallel --jobs 2",
         "package": "vsce package",
         "publish": "vsce publish",
         "prepublish": "npm test",

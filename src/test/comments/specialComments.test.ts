@@ -1,12 +1,11 @@
 import * as assert from 'assert';
 import { XmlFormatter } from '../../formatters/xmlFormatter';
+import { getTestConfig } from '../testConfig';
 
 suite('Special Comments Test Suite', () => {
-    const formatter = new XmlFormatter({
-        preserveComments: true,
-        indentSize: 4,
-        indentType: 'spaces'
-    });
+    const formatter = new XmlFormatter(getTestConfig({
+        indentSize: 4
+    }));
 
     test('Comment with code snippets should be preserved', () => {
         const input = `<odoo>

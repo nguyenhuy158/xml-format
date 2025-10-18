@@ -1,5 +1,6 @@
 import * as assert from 'assert';
 import { XmlFormatter } from '../../formatters/xmlFormatter';
+import { getTestConfig } from '../testConfig';
 
 suite('Maximum Blank Lines Test Suite', () => {
     test('Should limit consecutive blank lines to maximum (1)', () => {
@@ -11,9 +12,9 @@ suite('Maximum Blank Lines Test Suite', () => {
     <item>Second</item>
 </root>`;
 
-        const formatter = new XmlFormatter({
+        const formatter = new XmlFormatter(getTestConfig({
             maximumBlankLines: 1
-        });
+        }));
         const result = formatter.formatXml(xml);
 
         // Should have at most 1 blank line between items
@@ -44,9 +45,9 @@ suite('Maximum Blank Lines Test Suite', () => {
     <item>Second</item>
 </root>`;
 
-        const formatter = new XmlFormatter({
+        const formatter = new XmlFormatter(getTestConfig({
             maximumBlankLines: 2
-        });
+        }));
         const result = formatter.formatXml(xml);
 
         const lines = result.split('\n');
@@ -76,9 +77,9 @@ suite('Maximum Blank Lines Test Suite', () => {
     <item>Third</item>
 </root>`;
 
-        const formatter = new XmlFormatter({
+        const formatter = new XmlFormatter(getTestConfig({
             maximumBlankLines: 0
-        });
+        }));
         const result = formatter.formatXml(xml);
 
         // Split and filter out the last empty line (from trailing newline)
@@ -121,9 +122,9 @@ suite('Maximum Blank Lines Test Suite', () => {
     </section2>
 </root>`;
 
-        const formatter = new XmlFormatter({
+        const formatter = new XmlFormatter(getTestConfig({
             maximumBlankLines: 1
-        });
+        }));
         const result = formatter.formatXml(xml);
 
         const lines = result.split('\n');
@@ -165,9 +166,9 @@ suite('Maximum Blank Lines Test Suite', () => {
     </data>
 </odoo>`;
 
-        const formatter = new XmlFormatter({
+        const formatter = new XmlFormatter(getTestConfig({
             maximumBlankLines: 1
-        });
+        }));
         const result = formatter.formatXml(xml);
 
         const lines = result.split('\n');

@@ -1,16 +1,12 @@
 import * as assert from 'assert';
 import { XmlFormatter } from '../../formatters/xmlFormatter';
+import { getTestConfig } from '../testConfig';
 
 suite('Simple Attribute Formatting Test Suite', () => {
     test('Long line should break attributes', () => {
         const input = '<record id="very_long_record_name_that_makes_line_way_too_long" model="some.very.long.model.name.here" active="true" state="draft" priority="high">content</record>';
 
-        const formatter = new XmlFormatter({
-            formatAttributes: true,
-            maxLineLength: 80,
-            indentSize: 2,
-            indentType: 'spaces'
-        });
+        const formatter = new XmlFormatter(getTestConfig());
 
         const result = formatter.formatXml(input);
 
@@ -29,12 +25,7 @@ suite('Simple Attribute Formatting Test Suite', () => {
     test('Short line should stay on one line', () => {
         const input = '<record id="short" model="test">content</record>';
 
-        const formatter = new XmlFormatter({
-            formatAttributes: true,
-            maxLineLength: 80,
-            indentSize: 2,
-            indentType: 'spaces'
-        });
+        const formatter = new XmlFormatter(getTestConfig());
 
         const result = formatter.formatXml(input);
 
@@ -54,12 +45,9 @@ suite('Simple Attribute Formatting Test Suite', () => {
     <button name="action_submit" string="Submit" type="object" class="btn-primary" icon="fa-check" attrs="{'invisible': [('state', '=', 'done')]}"/>
 </odoo>`;
 
-        const formatter = new XmlFormatter({
-            indentSize: 4,
-            formatAttributes: true,
-            maxLineLength: 80,
+        const formatter = new XmlFormatter(getTestConfig({
             closeTagOnNewLine: true
-        });
+        }));
 
         const result = formatter.formatXml(input);
 

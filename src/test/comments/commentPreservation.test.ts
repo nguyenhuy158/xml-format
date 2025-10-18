@@ -1,5 +1,6 @@
 import * as assert from 'assert';
 import { XmlFormatter } from '../../formatters/xmlFormatter';
+import { getTestConfig } from '../testConfig';
 
 suite('Comment Preservation Test Suite', () => {
     test('Should preserve comments when preserveComments is true', () => {
@@ -12,7 +13,7 @@ suite('Comment Preservation Test Suite', () => {
     </record>
 </odoo>`;
 
-        const formatter = new XmlFormatter({ preserveComments: true });
+        const formatter = new XmlFormatter(getTestConfig({ preserveComments: true }));
         const result = formatter.formatXml(xml);
 
         assert.ok(result.includes('<!-- This is a comment -->'), 'Should preserve first comment');
@@ -29,7 +30,7 @@ suite('Comment Preservation Test Suite', () => {
     </record>
 </odoo>`;
 
-        const formatter = new XmlFormatter({ preserveComments: false });
+        const formatter = new XmlFormatter(getTestConfig({ preserveComments: false }));
         const result = formatter.formatXml(xml);
 
         assert.ok(!result.includes('<!-- This is a comment -->'), 'Should remove first comment');
@@ -49,7 +50,7 @@ suite('Comment Preservation Test Suite', () => {
     </record>
 </odoo>`;
 
-        const formatter = new XmlFormatter({ preserveComments: true });
+        const formatter = new XmlFormatter(getTestConfig({ preserveComments: true }));
         const result = formatter.formatXml(xml);
 
         assert.ok(result.includes('Multi-line comment'), 'Should preserve multi-line comment content');
@@ -65,7 +66,7 @@ suite('Comment Preservation Test Suite', () => {
     <!-- Bottom comment -->
 </odoo>`;
 
-        const formatter = new XmlFormatter({ preserveComments: true });
+        const formatter = new XmlFormatter(getTestConfig({ preserveComments: true }));
         const result = formatter.formatXml(xml);
 
         assert.ok(result.includes('Top-level comment'), 'Should preserve top-level comment');
@@ -80,7 +81,7 @@ suite('Comment Preservation Test Suite', () => {
     <record id="test" model="test.model"/>
 </odoo>`;
 
-        const formatter = new XmlFormatter(); // No options, use default
+        const formatter = new XmlFormatter(getTestConfig()); // Use default config
         const result = formatter.formatXml(xml);
 
         assert.ok(result.includes('<!-- Comment -->'), 'Default behavior should preserve comments');

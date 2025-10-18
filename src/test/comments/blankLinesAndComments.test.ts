@@ -1,5 +1,6 @@
 import * as assert from 'assert';
 import { XmlFormatter } from '../../formatters/xmlFormatter';
+import { getTestConfig } from '../testConfig';
 
 suite('Blank Lines and Comments Test Suite', () => {
     const testXml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -22,12 +23,9 @@ suite('Blank Lines and Comments Test Suite', () => {
 </odoo>`;
 
     test('Should preserve comments and limit blank lines', () => {
-        const formatter = new XmlFormatter({
-            preserveComments: true,
-            maximumBlankLines: 1,
-            indentSize: 4,
-            indentType: 'spaces'
-        });
+        const formatter = new XmlFormatter(getTestConfig({
+            indentSize: 4
+        }));
 
         const result = formatter.formatXml(testXml);
 
@@ -48,12 +46,9 @@ suite('Blank Lines and Comments Test Suite', () => {
     });
 
     test('Should not exceed maximum blank lines', () => {
-        const formatter = new XmlFormatter({
-            preserveComments: true,
-            maximumBlankLines: 1,
-            indentSize: 4,
-            indentType: 'spaces'
-        });
+        const formatter = new XmlFormatter(getTestConfig({
+            indentSize: 4
+        }));
 
         const result = formatter.formatXml(testXml);
 
@@ -64,12 +59,9 @@ suite('Blank Lines and Comments Test Suite', () => {
     });
 
     test('All comments should match exactly', () => {
-        const formatter = new XmlFormatter({
-            preserveComments: true,
-            maximumBlankLines: 1,
-            indentSize: 4,
-            indentType: 'spaces'
-        });
+        const formatter = new XmlFormatter(getTestConfig({
+            indentSize: 4
+        }));
 
         const result = formatter.formatXml(testXml);
 
@@ -92,12 +84,9 @@ suite('Blank Lines and Comments Test Suite', () => {
     });
 
     test('Content integrity should be maintained', () => {
-        const formatter = new XmlFormatter({
-            preserveComments: true,
-            maximumBlankLines: 1,
-            indentSize: 4,
-            indentType: 'spaces'
-        });
+        const formatter = new XmlFormatter(getTestConfig({
+            indentSize: 4
+        }));
 
         const result = formatter.formatXml(testXml);
 

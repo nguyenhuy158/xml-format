@@ -1,14 +1,13 @@
 import * as assert from 'assert';
 import { XmlFormatter } from '../../formatters/xmlFormatter';
+import { getTestConfig } from '../testConfig';
 
 suite('Comprehensive Attribute Sorting Test Suite', () => {
     test('Basic attribute sorting', () => {
         const input = '<field name="test" type="char" required="true" default="value"/>';
-        const formatter = new XmlFormatter({
-            sortAttributes: true,
-            formatAttributes: false,
-            maxLineLength: 120
-        });
+        const formatter = new XmlFormatter(getTestConfig({
+            formatAttributes: false
+        }));
 
         const result = formatter.formatXml(input);
 
@@ -32,12 +31,9 @@ suite('Comprehensive Attribute Sorting Test Suite', () => {
 
     test('Sorting with line breaking (long line)', () => {
         const input = '<record id="very_long_id_here" model="some.model.name" active="true" priority="high" context="ctx" state="draft"/>';
-        const formatter = new XmlFormatter({
-            sortAttributes: true,
-            formatAttributes: true,
-            maxLineLength: 60,
-            indentSize: 2
-        });
+        const formatter = new XmlFormatter(getTestConfig({
+            maxLineLength: 60
+        }));
 
         const result = formatter.formatXml(input);
 
@@ -51,12 +47,10 @@ suite('Comprehensive Attribute Sorting Test Suite', () => {
 
     test('No sorting (preserve original order)', () => {
         const input = '<field name="z_field" type="char" attr_a="1" attr_b="2"/>';
-        const formatter = new XmlFormatter({
+        const formatter = new XmlFormatter(getTestConfig({
             sortAttributes: false,
-            formatAttributes: true,
-            maxLineLength: 40,
-            indentSize: 2
-        });
+            maxLineLength: 40
+        }));
 
         const result = formatter.formatXml(input);
 
@@ -68,11 +62,9 @@ suite('Comprehensive Attribute Sorting Test Suite', () => {
 
     test('Short line (no breaking)', () => {
         const input = '<field name="x" type="char"/>';
-        const formatter = new XmlFormatter({
-            sortAttributes: true,
-            formatAttributes: true,
+        const formatter = new XmlFormatter(getTestConfig({
             maxLineLength: 80
-        });
+        }));
 
         const result = formatter.formatXml(input);
 
@@ -89,12 +81,10 @@ suite('Comprehensive Attribute Sorting Test Suite', () => {
     <field name="email" widget="email" string="Email Address"/>
 </form>`;
 
-        const formatter = new XmlFormatter({
-            sortAttributes: true,
-            formatAttributes: true,
-            maxLineLength: 80,
-            indentSize: 4
-        });
+        const formatter = new XmlFormatter(getTestConfig({
+            indentSize: 4,
+            maxLineLength: 80
+        }));
 
         const result = formatter.formatXml(input);
 

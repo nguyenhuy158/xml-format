@@ -1,5 +1,6 @@
 import * as assert from 'assert';
 import { XmlFormatter } from '../../formatters/xmlFormatter';
+import { getTestConfig } from '../testConfig';
 
 suite('XPath Closing Tag Test Suite', () => {
     const testXml = `<?xml version="1.0"?>
@@ -11,12 +12,9 @@ suite('XPath Closing Tag Test Suite', () => {
 </odoo>`;
 
     test('XPath with closeTagOnNewLine = false', () => {
-        const formatter = new XmlFormatter({
-            indentSize: 4,
-            formatAttributes: true,
-            maxLineLength: 80,
+        const formatter = new XmlFormatter(getTestConfig({
             closeTagOnNewLine: false
-        });
+        }));
 
         const result = formatter.formatXml(testXml);
 
@@ -31,12 +29,9 @@ suite('XPath Closing Tag Test Suite', () => {
     });
 
     test('XPath with closeTagOnNewLine = true', () => {
-        const formatter = new XmlFormatter({
-            indentSize: 4,
-            formatAttributes: true,
-            maxLineLength: 80,
+        const formatter = new XmlFormatter(getTestConfig({
             closeTagOnNewLine: true
-        });
+        }));
 
         const result = formatter.formatXml(testXml);
 
@@ -53,12 +48,9 @@ suite('XPath Closing Tag Test Suite', () => {
     });
 
     test('Field with complex attributes', () => {
-        const formatter = new XmlFormatter({
-            indentSize: 4,
-            formatAttributes: true,
-            maxLineLength: 80,
+        const formatter = new XmlFormatter(getTestConfig({
             closeTagOnNewLine: false
-        });
+        }));
 
         const result = formatter.formatXml(testXml);
 

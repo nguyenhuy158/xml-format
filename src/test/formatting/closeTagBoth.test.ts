@@ -1,5 +1,6 @@
 import * as assert from 'assert';
 import { XmlFormatter } from '../../formatters/xmlFormatter';
+import { getTestConfig } from '../testConfig';
 
 suite('Close Tag Both Options Test Suite', () => {
     const testXml = `<?xml version="1.0"?>
@@ -9,12 +10,9 @@ suite('Close Tag Both Options Test Suite', () => {
 </odoo>`;
 
     test('closeTagOnNewLine = false should keep closing tag on same line', () => {
-        const formatter = new XmlFormatter({
-            indentSize: 4,
-            formatAttributes: true,
-            maxLineLength: 80,
+        const formatter = new XmlFormatter(getTestConfig({
             closeTagOnNewLine: false
-        });
+        }));
 
         const result = formatter.formatXml(testXml);
 
@@ -50,19 +48,13 @@ suite('Close Tag Both Options Test Suite', () => {
     });
 
     test('Both options should preserve all content', () => {
-        const formatter1 = new XmlFormatter({
-            indentSize: 4,
-            formatAttributes: true,
-            maxLineLength: 80,
+        const formatter1 = new XmlFormatter(getTestConfig({
             closeTagOnNewLine: false
-        });
+        }));
 
-        const formatter2 = new XmlFormatter({
-            indentSize: 4,
-            formatAttributes: true,
-            maxLineLength: 80,
+        const formatter2 = new XmlFormatter(getTestConfig({
             closeTagOnNewLine: true
-        });
+        }));
 
         const result1 = formatter1.formatXml(testXml);
         const result2 = formatter2.formatXml(testXml);
@@ -77,12 +69,9 @@ suite('Close Tag Both Options Test Suite', () => {
     });
 
     test('Complex attrs with JSON should be preserved', () => {
-        const formatter = new XmlFormatter({
-            indentSize: 4,
-            formatAttributes: true,
-            maxLineLength: 80,
+        const formatter = new XmlFormatter(getTestConfig({
             closeTagOnNewLine: true
-        });
+        }));
 
         const result = formatter.formatXml(testXml);
 

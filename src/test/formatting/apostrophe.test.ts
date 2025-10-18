@@ -1,16 +1,13 @@
 import * as assert from 'assert';
 import { XmlFormatter } from '../../formatters/xmlFormatter';
+import { getTestConfig } from '../testConfig';
 
 suite('Apostrophe and Quote Handling Test Suite', () => {
     let formatter: XmlFormatter;
 
     setup(() => {
-        formatter = new XmlFormatter({
-            indentSize: 4,
-            formatAttributes: true,
-            sortAttributes: true,
-            selfClosingTags: true
-        });
+        // Use global config
+        formatter = new XmlFormatter(getTestConfig());
     });
 
     test('Should preserve apostrophes in XPath expressions', () => {
@@ -21,7 +18,7 @@ suite('Apostrophe and Quote Handling Test Suite', () => {
 </odoo>`;
 
         const result = formatter.formatXml(input);
-        
+
         // Should NOT convert ' to &apos; in double-quoted attributes
         assert.ok(!result.includes('&apos;'), 'Result should not contain &apos; entities');
         assert.ok(result.includes("[@name='partner_id']"), 'Should preserve single quotes in XPath');
@@ -35,7 +32,7 @@ suite('Apostrophe and Quote Handling Test Suite', () => {
 </odoo>`;
 
         const result = formatter.formatXml(input);
-        
+
         assert.ok(!result.includes('&apos;'), 'Should not contain &apos; entities');
         assert.ok(result.includes("('name'"), 'Should preserve single quotes in domain');
     });
@@ -46,7 +43,7 @@ suite('Apostrophe and Quote Handling Test Suite', () => {
 </odoo>`;
 
         const result = formatter.formatXml(input);
-        
+
         assert.ok(!result.includes('&apos;'), 'Should not contain &apos; entities');
         assert.ok(!result.includes('&quot;'), 'Should not contain &quot; entities');
         assert.ok(result.includes("It's a \"test\" value"), 'Should preserve mixed quotes');
@@ -54,9 +51,9 @@ suite('Apostrophe and Quote Handling Test Suite', () => {
 
     test('Should handle attributes with single quotes', () => {
         const input = `<xpath expr='//field[@name="partner_id"]' position="after"/>`;
-        
+
         const result = formatter.formatXml(input);
-        
+
         // fast-xml-parser normalizes to double quotes, so this is expected
         assert.ok(!result.includes('&quot;'), 'Should not contain unnecessary &quot; entities in normalized output');
     });
@@ -73,7 +70,7 @@ suite('Apostrophe and Quote Handling Test Suite', () => {
 </odoo>`;
 
         const result = formatter.formatXml(input);
-        
+
         assert.ok(!result.includes('&apos;'), 'Should not contain &apos; entities');
         assert.ok(result.includes("[@name='partner_id']"), 'Should preserve XPath syntax');
         assert.ok(result.includes('invisible="1"'), 'Should preserve attribute format');
@@ -86,7 +83,7 @@ suite('Apostrophe and Quote Handling Test Suite', () => {
 </record>`;
 
         const result = formatter.formatXml(input);
-        
+
         assert.ok(!result.includes('&apos;'), 'Should not contain &apos; entities');
         assert.ok(!result.includes('&quot;'), 'Should not contain &quot; entities');
         assert.ok(result.includes("('state'"), 'Should preserve single quotes in first domain');

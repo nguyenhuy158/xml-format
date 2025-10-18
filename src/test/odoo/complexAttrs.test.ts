@@ -1,5 +1,6 @@
 import * as assert from 'assert';
 import { XmlFormatter } from '../../formatters/xmlFormatter';
+import { getTestConfig } from '../testConfig';
 
 /**
  * Test Suite: Complex Odoo Attrs
@@ -19,20 +20,18 @@ suite('Complex Odoo Attrs Test Suite', () => {
     let formatter: XmlFormatter;
 
     setup(() => {
-        formatter = new XmlFormatter({
+        formatter = new XmlFormatter(getTestConfig({
             indentSize: 4,
             formatAttributes: false,
-            sortAttributes: false,
-            selfClosingTags: true,
-            maximumBlankLines: 1
-        });
+            sortAttributes: false
+        }));
     });
 
     test('Should preserve attrs content when formatAttributes is enabled', () => {
-        const formatterWithFormatAttrs = new XmlFormatter({
+        const formatterWithFormatAttrs = new XmlFormatter(getTestConfig({
             indentSize: 4,
             formatAttributes: true
-        });
+        }));
 
         const input = `<odoo>
     <xpath position="attributes">

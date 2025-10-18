@@ -44,5 +44,10 @@
 	"xml-formater.indentType": "spaces",
 	"[xml]": {
 		"editor.defaultFormatter": "nguyenhuy158.xml-formater"
-	}
+	},
+	"chat.agent.maxRequests": 30,
+	"chat.instructionsFilesLocations": {
+		"copilot-instructions.md": true
+	},
+	"chat.useNestedAgentsMdFiles": true
 }

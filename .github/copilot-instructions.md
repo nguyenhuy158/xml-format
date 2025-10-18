@@ -9,6 +9,14 @@
 - Don't repeat information the user already knows
 - Answer in Vietnamese when user asks in Vietnamese, English when user asks in English
 
+## File Editing Rules
+- **ONLY use MCP Server File Manager tools** for editing files: `read_file`, `create_file`, `replace_string_in_file`
+- **NEVER use terminal commands** to modify file contents: no `node -e`, `node -p`, `sed`, `awk`, `echo >`, `cat >`, or similar
+- **NEVER use `node -e` or `node -p`** to write files or generate content - use file tools instead
+- Terminal is ONLY for: building, testing, running scripts, git operations, npm commands
+- **WRONG**: `node -e "fs.writeFileSync(...)"`, `node -p "..."  > file.txt`, `sed -i 's/.../.../g'`, `echo "content" > file.txt`
+- **RIGHT**: Use `create_file` or `replace_string_in_file` tools to modify files
+
 ## Project Overview
 This is a VS Code extension project for formatting XML files, specifically designed for Odoo development workflows. The extension is built using TypeScript and follows standard VS Code Extension API patterns.
 
