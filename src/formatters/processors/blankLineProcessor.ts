@@ -30,7 +30,7 @@ export function restoreBlankLinesFromComments(xml: string, maximumBlankLines: nu
     // Extract comments temporarily to avoid processing blank lines inside them
     const commentMap = new Map<string, string>();
     let commentIndex = 0;
-    
+
     // Extract comments with their content preserved exactly as-is
     let result = xml.replace(/<!--([\s\S]*?)-->/g, (match, content) => {
         const placeholder = `__TEMP_COMMENT_${commentIndex}__`;

@@ -40,6 +40,7 @@ npm run lint       # Check code style
 - **ALL tests go in `src/test/` folder** - never in root
 - **Use TypeScript only** - no .js files
 - **Use fixture files** - no XML strings in test code
+- **ALWAYS use `getTestConfig()`** - all `formatXml` calls must include config parameter
 - Test file name: `{feature}.test.ts`
 - Fixture files: `src/test/fixtures/{category}/{testName}-input.xml` and `-expected.xml`
 
@@ -70,11 +71,12 @@ npm run lint       # Check code style
 import * as assert from 'assert';
 import { formatXml } from '../../../formatters/xmlFormatter';
 import { loadFixture } from '../../utils/fixtureLoader';
+import { getTestConfig } from '../testConfig';
 
 suite('Feature Name Test Suite', () => {
     test('Test case description', () => {
         const fixture = loadFixture('category', 'testName');
-        const result = formatXml(fixture.input);
+        const result = formatXml(fixture.input, getTestConfig());
         assert.strictEqual(result, fixture.expected);
     });
 });
