@@ -3,7 +3,7 @@
     "useTabs": false,
     "alignAttributes": true,
     "formatAttributes": true,
-    "preserveComments": false,
+    "preserveComments": true,
     "sortAttributes": true,
     "preserveAttributes": false,
     "emptyElementHandling": "selfClosing",
