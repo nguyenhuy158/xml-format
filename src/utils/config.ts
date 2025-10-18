@@ -11,6 +11,7 @@ interface XmlFormatterRcConfig {
     emptyElementHandling?: 'selfClosing' | 'expand';
     maxLineLength?: number;
     sortAttributes?: boolean;
+    preserveAttributes?: boolean;
     closeTagOnNewLine?: boolean;
     preserveComments?: boolean;
     maximumBlankLines?: number;
@@ -97,6 +98,9 @@ export class ConfigManager {
         }
         if (rcConfig.sortAttributes !== undefined) {
             options.sortAttributes = rcConfig.sortAttributes;
+        }
+        if (rcConfig.preserveAttributes !== undefined) {
+            options.preserveAttributes = rcConfig.preserveAttributes;
         }
         if (rcConfig.closeTagOnNewLine !== undefined) {
             options.closeTagOnNewLine = rcConfig.closeTagOnNewLine;
