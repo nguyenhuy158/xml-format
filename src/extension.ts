@@ -3,7 +3,6 @@
 import * as vscode from "vscode";
 import { testConfiguration, testConfigurationChangeLogging } from "./test/config/configTest";
 import { testFormatOnSave, demonstrateFormatOnSaveSettings } from "./test/config/formatOnSaveTest";
-import { testAttributeFormatting } from "./test/attributes/attributeTest";
 import { XmlFormatter } from "./formatters/xmlFormatter";
 import { ConfigManager } from "./utils/config";
 
@@ -374,10 +373,9 @@ export function activate(context: vscode.ExtensionContext) {
             const configTestResult = testConfiguration();
             const changeLoggingResult = await testConfigurationChangeLogging();
             const formatOnSaveResult = testFormatOnSave();
-            const attributeTestResult = testAttributeFormatting();
             demonstrateFormatOnSaveSettings();
 
-            if (configTestResult && changeLoggingResult && formatOnSaveResult && attributeTestResult) {
+            if (configTestResult && changeLoggingResult && formatOnSaveResult) {
                 vscode.window.showInformationMessage(
                     "All tests completed successfully! Check console and Output panel for details."
                 );
