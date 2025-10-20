@@ -10,6 +10,8 @@ Based on the project's commit history, use this format:
 <type>(<scope>): <description>
 ```
 
+**REQUIRED**: The scope MUST be wrapped in parentheses `()` - this is mandatory for all commits.
+
 ## Commit Types (from project history)
 - **feat**: New features (e.g., `feat(config): add preserveAttributes option`)
 - **fix**: Bug fixes (e.g., `fix(formatter): enable preservation of comments`)
@@ -52,3 +54,10 @@ Based on the project's commit history, use this format:
 - Keep descriptions concise but descriptive
 - Use English A2 level vocabulary
 - Follow the established patterns in the project history
+
+## Pre-Push Validation
+**MANDATORY**: Before pushing any commit, you MUST:
+1. Show the commit message to the user
+2. Ask for confirmation: "Is this commit message OK? (y/n)"
+3. Only proceed with push after user confirms with "y" or "yes"
+4. If user says "n" or "no", ask them to provide the correct message
