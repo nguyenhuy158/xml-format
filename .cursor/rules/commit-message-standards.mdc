@@ -1,0 +1,54 @@
+---
+alwaysApply: true
+---
+# Commit Message Standards
+
+## Commit Message Format
+Based on the project's commit history, use this format:
+
+```
+<type>(<scope>): <description>
+```
+
+## Commit Types (from project history)
+- **feat**: New features (e.g., `feat(config): add preserveAttributes option`)
+- **fix**: Bug fixes (e.g., `fix(formatter): enable preservation of comments`)
+- **refactor**: Code refactoring (e.g., `refactor(test): migrate to fixture pattern`)
+- **test**: Test-related changes (e.g., `test(attributes): refactor to proper test suite`)
+- **chore**: Maintenance tasks (e.g., `chore(docs): simplify copilot instructions`)
+- **bug**: Critical bug fixes (e.g., `bug(json): fix json formatting`)
+
+## Common Scopes (from project history)
+- **config**: Configuration changes
+- **formatter**: XML formatter logic
+- **test**: Test files and utilities
+- **core**: Core functionality
+- **docs**: Documentation
+- **attributes**: Attribute handling
+- **comments**: Comment processing
+- **odoo**: Odoo-specific features
+
+## Description Guidelines
+- Use simple English (A2 level)
+- Be specific and clear
+- Use present tense ("add" not "added")
+- Keep under 50 characters for the description
+- Use lowercase for the description
+
+## Examples from Project History
+- `feat(config): add preserveAttributes option to XmlFormatterRcConfig`
+- `fix(formatter): enable preservation of comments in XML formatting`
+- `refactor(test): migrate close tag tests to fixture pattern`
+- `test(attributes): refactor attributeTest to proper test suite`
+- `chore(docs): simplify copilot instructions to english a2`
+
+## Version Commits
+- Use semantic versioning: `1.0.11`, `1.0.10`, etc.
+- No type or scope needed for version bumps
+
+## Best Practices
+- Always include scope when it's clear from the changes
+- Use conventional commit format for consistency
+- Keep descriptions concise but descriptive
+- Use English A2 level vocabulary
+- Follow the established patterns in the project history

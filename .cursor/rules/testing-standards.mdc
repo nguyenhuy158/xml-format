@@ -1,0 +1,33 @@
+---
+globs: src/test/**/*.ts
+description: Testing standards for Mocha and Chai tests
+---
+
+# Testing Standards
+
+## Test Organization
+- Write all tests inside `src/test` using Mocha and Chai
+- Ensure tests are isolated, fast, and use real VSCode API mocks when needed
+- No console logs or extra output in tests
+- Use simple English (A2 level) and clear technical words only
+
+## Test Requirements
+- Tests should be fast and isolated
+- Use real VSCode API mocks when needed
+- No console output in tests
+- Comprehensive coverage of formatting scenarios
+- Test both positive and negative cases
+
+## Test Structure
+- Group tests by feature in subdirectories
+- Use descriptive test names
+- Keep test files focused on specific functionality
+- Use fixtures for input/output comparison
+
+## Key Test Files
+- Test configuration: [src/test/testConfig.ts](mdc:src/test/testConfig.ts)
+- Test utilities: [src/test/utils/fixtureLoader.ts](mdc:src/test/utils/fixtureLoader.ts)
+- XML formatter tests: [src/test/xmlFormatterTest.ts](mdc:src/test/xmlFormatterTest.ts)
+- Attribute tests: [src/test/attributes/](mdc:src/test/attributes/)
+- Comment tests: [src/test/comments/](mdc:src/test/comments/)
+- Formatting tests: [src/test/formatting/](mdc:src/test/formatting/)

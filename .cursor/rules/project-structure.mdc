@@ -1,0 +1,35 @@
+---
+alwaysApply: true
+description: XML Format VSCode Extension project structure and guidelines
+---
+
+# XML Format VSCode Extension
+
+## Project Overview
+This is a VSCode extension for XML formatting with comprehensive testing. The project uses TypeScript, follows VSCode extension best practices, and includes extensive test coverage.
+
+## Core Files
+- Main extension: [src/extension.ts](mdc:src/extension.ts)
+- XML formatter: [src/formatters/xmlFormatter.ts](mdc:src/formatters/xmlFormatter.ts)
+- Formatter types: [src/formatters/types.ts](mdc:src/formatters/types.ts)
+- Configuration: [src/utils/config.ts](mdc:src/utils/config.ts)
+- Package configuration: [package.json](mdc:package.json)
+- TypeScript config: [tsconfig.json](mdc:tsconfig.json)
+
+## Formatters Directory
+- Main formatter: [src/formatters/xmlFormatter.ts](mdc:src/formatters/xmlFormatter.ts)
+- Blank line processor: [src/formatters/processors/blankLineProcessor.ts](mdc:src/formatters/processors/blankLineProcessor.ts)
+- Comment processor: [src/formatters/processors/commentProcessor.ts](mdc:src/formatters/processors/commentProcessor.ts)
+- Shared types: [src/formatters/types.ts](mdc:src/formatters/types.ts)
+
+## Test Structure
+- Test configuration: [src/test/testConfig.ts](mdc:src/test/testConfig.ts)
+- Test utilities: [src/test/utils/fixtureLoader.ts](mdc:src/test/utils/fixtureLoader.ts)
+- Test fixtures: [src/test/fixtures/](mdc:src/test/fixtures/)
+- Organized by feature: attributes, comments, formatting, validation, odoo
+
+## Build and Development
+- All code compiles to `out/` directory
+- Use TypeScript strict mode
+- Follow ESLint configuration
+- Maintain test coverage reports in `coverage/`
